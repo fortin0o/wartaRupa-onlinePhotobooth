@@ -9,31 +9,36 @@ const HomeScreen = ({ onSelectTemplate }) => {
       <div className="flex flex-col items-center min-h-screen bg-[#f4ecd8] py-12 px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-playfair font-bold mb-4">Pilih Tema Photostrip</h2>
-          <p className="font-garamond italic text-gray-700">Pilih gaya strip yang paling sesuai dengan mood-mu.</p>
+          <p className="font-garamond italic text-gray-700">
+            {stripThemes.length} tema tersedia — pilih yang paling sesuai mood-mu.
+          </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-6xl items-stretch">
+        <div
+          className="w-full max-w-7xl gap-5 items-stretch"
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
+        >
           {stripThemes.map(theme => {
             const ThemeComponent = theme.component;
             return (
               <div 
                 key={theme.id} 
                 onClick={() => onSelectTemplate('photostrip', 3, theme.id)}
-                className="flex flex-col items-center h-full bg-white border border-gray-300 p-4 transition-shadow hover:shadow-md cursor-pointer"
+                className="flex flex-col items-center h-full bg-white border border-gray-300 p-4 transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
               >
-                <div className="w-full text-center mb-6">
-                  <h3 className="font-playfair text-xl font-bold border-b-2 border-black inline-block pb-1">{theme.name}</h3>
-                  <p className="text-xs font-garamond text-gray-500 mt-2">{theme.desc}</p>
+                <div className="w-full text-center mb-4">
+                  <h3 className="font-playfair text-lg font-bold border-b-2 border-black inline-block pb-1">{theme.name}</h3>
+                  <p className="text-xs font-garamond text-gray-500 mt-1">{theme.desc}</p>
                 </div>
                 
                 {/* Visual Preview menggunakan komponen aslinya yang di-scale down */}
-                <div className="pointer-events-none flex justify-center mb-6 overflow-hidden w-full h-[320px]">
-                  <div className="origin-top" style={{ transform: 'scale(0.7)' }}>
+                <div className="pointer-events-none flex justify-center mb-4 overflow-hidden w-full h-[280px]">
+                  <div className="origin-top" style={{ transform: 'scale(0.62)' }}>
                     <ThemeComponent />
                   </div>
                 </div>
                 
-                <button className="w-full py-3 bg-black text-white font-garamond font-bold mt-auto hover:bg-gray-800 transition-colors">
+                <button className="w-full py-2.5 bg-black text-white font-garamond font-bold mt-auto text-sm hover:bg-gray-800 transition-colors">
                   Pilih Tema
                 </button>
               </div>
