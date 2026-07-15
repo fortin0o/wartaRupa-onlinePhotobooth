@@ -38,9 +38,9 @@ function App() {
       
       {currentScreen === 'camera' && (
         <CameraScreen 
+          requiredPhotoCount={requiredPhotoCount}
           onCapture={handleCapture} 
           onBack={handleReset} 
-          // Nanti di Tahap berikutnya (CameraScreen) kita bisa passing requiredPhotoCount ke sini
         />
       )}
       
