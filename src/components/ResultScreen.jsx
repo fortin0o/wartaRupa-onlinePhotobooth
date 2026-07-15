@@ -50,7 +50,7 @@ const ResultScreen = ({ template, stripThemeId, photos, selectedFilterId, onRese
     : null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4 pb-12 sm:pb-16 overflow-y-auto">
       
       {/* Hidden Container: Target render untuk html-to-image */}
       <div className="absolute left-[-9999px] top-[-9999px]">

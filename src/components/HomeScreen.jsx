@@ -12,14 +12,14 @@ const HomeScreen = ({ onSelectTemplate }) => {
           <p className="font-garamond italic text-gray-700">Pilih gaya strip yang paling sesuai dengan mood-mu.</p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-6xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-6xl items-stretch">
           {stripThemes.map(theme => {
             const ThemeComponent = theme.component;
             return (
               <div 
                 key={theme.id} 
                 onClick={() => onSelectTemplate('photostrip', 3, theme.id)}
-                className="flex flex-col items-center bg-white border-2 border-black p-4 hover:shadow-[8px_8px_0_0_#000] transition-shadow cursor-pointer"
+                className="flex flex-col items-center h-full bg-white border border-gray-300 p-4 transition-shadow hover:shadow-md cursor-pointer"
               >
                 <div className="w-full text-center mb-6">
                   <h3 className="font-playfair text-xl font-bold border-b-2 border-black inline-block pb-1">{theme.name}</h3>
@@ -27,8 +27,10 @@ const HomeScreen = ({ onSelectTemplate }) => {
                 </div>
                 
                 {/* Visual Preview menggunakan komponen aslinya yang di-scale down */}
-                <div className="pointer-events-none origin-top mb-4 h-[300px] overflow-hidden" style={{ transform: 'scale(0.5)' }}>
-                  <ThemeComponent />
+                <div className="pointer-events-none flex justify-center mb-6 overflow-hidden w-full h-[320px]">
+                  <div className="origin-top" style={{ transform: 'scale(0.7)' }}>
+                    <ThemeComponent />
+                  </div>
                 </div>
                 
                 <button className="w-full py-3 bg-black text-white font-garamond font-bold mt-auto hover:bg-gray-800 transition-colors">

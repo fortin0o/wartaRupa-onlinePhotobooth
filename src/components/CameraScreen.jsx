@@ -144,6 +144,8 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
                 autoPlay 
                 playsInline 
                 muted
+                disablePictureInPicture
+                controlsList="nodownload nofullscreen noremoteplayback"
                 className={`absolute inset-0 w-full h-full object-cover -scale-x-100 ${currentDraft ? 'opacity-0' : 'opacity-100'}`}
               />
               
