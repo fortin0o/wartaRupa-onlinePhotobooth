@@ -1,125 +1,91 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
 
-const stampLabels = ['EXCLUSIVE', 'BREAKING', 'TERUNGKAP', 'VIRAL', 'HOT TAKE', 'RAHASIA'];
-
 const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline(), []);
+  const headline = useMemo(() => getRandomHeadline().substring(0, 35), []);
   const article  = useMemo(() => getRandomArticle(), []);
-  const stamp    = useMemo(() => stampLabels[Math.floor(Math.random() * stampLabels.length)], []);
-
+  
   const today = new Date().toLocaleDateString('id-ID', {
     day: 'numeric', month: 'long', year: 'numeric'
   });
 
-  const mainPhotoSrc  = bigPhoto  || 'https://via.placeholder.com/400x300?text=Foto+Besar';
+  const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
   const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
 
   return (
-    <div className="bg-[#fcf8ed] text-black w-[480px] h-[640px] mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden relative">
+    <div className="bg-[#fcf8ed] text-black w-[480px] h-[640px] mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden relative border-4 border-black">
 
       {/* ── HEADER STRIP ─────────────────────────────────── */}
-      <div className="bg-[#d32f2f] flex justify-between items-center px-3 py-1 text-white text-[10px] font-black uppercase tracking-widest">
-        <span>Breaking News</span>
-        <span>Special Issue</span>
-      </div>
-
-      {/* ── MASTHEAD ─────────────────────────────────────── */}
-      <div className="text-center py-3 px-4 border-b-4 border-black">
-        {/* Nama brand dengan aksen kuning */}
-        <div className="inline-block relative">
-          <span
-            className="font-playfair text-5xl font-black leading-none tracking-tight relative z-10"
-            style={{ WebkitTextStroke: '1px black' }}
-          >
-            Warta Rupa
-          </span>
-          {/* Underline kuning tebal */}
-          <div className="absolute bottom-0 left-0 right-0 h-3 bg-[#f5d020] -z-0 translate-y-1" />
-        </div>
-        <p className="font-garamond italic text-[12px] text-gray-700 mt-2">
-          capture the moment, make the news
-        </p>
-      </div>
-
-      {/* ── META BAR ─────────────────────────────────────── */}
-      <div className="flex justify-between items-center text-[11px] font-black uppercase px-3 py-1 bg-[#f5d020] border-b-2 border-black">
-        <span>Surakarta</span>
+      <div className="bg-[#d32f2f] flex justify-between items-center px-3 py-1 text-white text-[10px] font-black uppercase tracking-widest shrink-0">
+        <span>Edisi Terpanas</span>
         <span>{today}</span>
       </div>
 
-      {/* ── HEADLINE ─────────────────────────────────────── */}
-      <div className="px-4 pt-4 pb-2">
-        <h2
-          className="font-playfair font-black text-[2rem] uppercase leading-[1.05] text-center"
-          style={{
-            textShadow: '-1px -1px 0 #d32f2f, 1px -1px 0 #d32f2f, -1px 1px 0 #d32f2f, 1px 1px 0 #d32f2f',
-            WebkitTextStroke: '0.5px #d32f2f',
-          }}
+      {/* ── MASTHEAD ─────────────────────────────────────── */}
+      <div className="text-center pt-3 pb-1 border-b-4 border-black shrink-0 relative bg-[#f5d020]">
+        <h1 
+          className="font-playfair text-6xl font-black leading-none tracking-tighter"
+          style={{ textShadow: '2px 2px 0px #fff' }}
         >
-          {headline}
+          WARTA RUPA
+        </h1>
+        <p className="font-sans font-bold text-[10px] uppercase tracking-widest mt-1">
+          Skandal Visual & Momen Eksklusif
+        </p>
+      </div>
+
+      {/* ── HEADLINE ─────────────────────────────────────── */}
+      <div className="px-4 py-3 shrink-0 text-center">
+        <h2 className="font-sans font-black text-[2rem] leading-[1.05] uppercase text-[#d32f2f] tracking-tight">
+          {headline}!!
         </h2>
       </div>
 
-      {/* ── DIVIDER ──────────────────────────────────────── */}
-      <div className="h-[3px] mx-4 mb-3 bg-gradient-to-r from-[#d32f2f] via-black to-[#d32f2f]" />
-
-      {/* ── FOTO BESAR + STEMPEL ─────────────────────────── */}
-      <div className="mx-4 mb-1 border-2 border-black relative">
-        <img
-          src={mainPhotoSrc}
-          alt="Foto Utama"
-          className="w-full aspect-[4/3] object-cover"
-          style={{ filter: filterStyle }}
-        />
-
-        {/* Stempel Oval Miring */}
-        <div
-          className="absolute bottom-3 right-3 flex items-center justify-center"
-          style={{ transform: 'rotate(-15deg)' }}
-        >
-          <div className="bg-[#d32f2f] border-[3px] border-white rounded-full w-[68px] h-[56px] flex items-center justify-center shadow-lg">
-            <span className="text-white font-black text-[11px] uppercase tracking-wide text-center leading-tight">
-              {stamp}
-            </span>
+      {/* ── MAIN CONTENT (FLEX) ──────────────────────────── */}
+      <div className="flex flex-col flex-1 px-4 pb-4 overflow-hidden gap-3">
+        
+        {/* BIG PHOTO + STAMP */}
+        <div className="relative border-4 border-black shrink-0">
+          <img
+            src={mainPhotoSrc}
+            alt="Foto Utama"
+            className="w-full h-[240px] object-cover"
+            style={{ filter: filterStyle }}
+          />
+          {/* Stempel miring */}
+          <div 
+            className="absolute -bottom-3 -right-3 bg-[#d32f2f] text-white rounded-[50%] border-4 border-white flex items-center justify-center shadow-lg z-10"
+            style={{ width: '80px', height: '50px', transform: 'rotate(-15deg)' }}
+          >
+            <span className="font-black text-[12px] tracking-wider">EKSKLUSIF</span>
           </div>
         </div>
-      </div>
 
-      {/* ── CAPTION ──────────────────────────────────────── */}
-      <div className="flex justify-between items-center text-[10px] uppercase text-gray-600 mx-4 mb-4 font-black">
-        <span>Candid Moment</span>
-        <span>Vol. 01</span>
-      </div>
-
-      {/* ── SEKSI ARTIKEL + FOTO KECIL ───────────────────── */}
-      <div className="mx-4 mb-5">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="bg-[#d32f2f] h-[3px] flex-1" />
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-[#d32f2f] whitespace-nowrap">
-            Sorotan Hari Ini
-          </h3>
-          <div className="bg-[#d32f2f] h-[3px] flex-1" />
-        </div>
-
-        <div className="flex gap-3 items-start">
-          <div className="w-[80px] h-[80px] shrink-0 border-2 border-black">
-            <img
-              src={smallPhotoSrc}
-              alt="Foto Kecil"
-              className="w-full h-full object-cover"
-              style={{ filter: filterStyle }}
-            />
+        {/* 2 COLUMNS FOR TEXT & SMALL PHOTO */}
+        <div className="flex gap-4 flex-1 overflow-hidden mt-1">
+          <div className="flex-1 flex flex-col">
+            <h3 className="font-black text-[12px] uppercase mb-1 text-[#d32f2f] border-b-2 border-black pb-1">
+              Fakta Mengejutkan
+            </h3>
+            <p className="font-sans text-[11px] text-justify font-medium leading-snug">
+              {article.substring(0, 300)}...
+            </p>
           </div>
-          <p className="font-garamond text-[11px] text-justify leading-relaxed flex-1">
-            {article}
-          </p>
+          
+          <div className="w-[120px] flex flex-col shrink-0">
+            <div className="border-2 border-black p-1 bg-white mb-2">
+              <img
+                src={smallPhotoSrc}
+                alt="Foto Kecil"
+                className="w-full h-[120px] object-cover"
+                style={{ filter: filterStyle }}
+              />
+            </div>
+            <p className="font-sans font-bold text-[9px] text-center uppercase leading-tight bg-black text-white py-1">
+              Tertangkap Kamera!
+            </p>
+          </div>
         </div>
-      </div>
-
-      {/* ── FOOTER ───────────────────────────────────────── */}
-      <div className="bg-black text-white text-center text-[10px] py-1.5 font-black uppercase tracking-widest mt-auto">
-        @warta.rupa
       </div>
 
     </div>

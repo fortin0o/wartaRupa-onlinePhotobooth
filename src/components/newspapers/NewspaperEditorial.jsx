@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
 
 const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline(), []);
+  const headline = useMemo(() => getRandomHeadline().substring(0, 50), []);
   const article  = useMemo(() => getRandomArticle(), []);
 
   const today = new Date().toLocaleDateString('id-ID', {
@@ -20,7 +20,7 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
       {/* ── TOP META BAR ─────────────────────────────────── */}
       <div
-        className="flex justify-between items-center px-5 py-2 text-[9px] tracking-[0.2em] uppercase whitespace-nowrap"
+        className="flex justify-between items-center px-5 py-2 text-[9px] tracking-[0.2em] uppercase whitespace-nowrap shrink-0"
         style={{ fontFamily: '"Archivo", sans-serif', borderBottom: '1px solid #ddd', color: '#999' }}
       >
         <span>Warta Rupa Studio</span>
@@ -28,29 +28,23 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         <span>Vol. 01</span>
       </div>
 
-      {/* ── MASTHEAD ─────────────────────────────────────── */}
-      <div className="px-5 pt-8 pb-4">
+      {/* ── MASTHEAD & HEADLINE ──────────────────────────── */}
+      <div className="flex-1 px-5 pt-6 flex flex-col justify-center">
         <h1
-          className="text-[3.5rem] leading-[0.95] tracking-[-0.04em] text-black font-archivo"
-          style={{ fontWeight: 600, letterSpacing: '-0.04em' }}
+          className="text-[4rem] leading-[0.9] tracking-[-0.04em] text-black font-archivo"
+          style={{ fontWeight: 600 }}
         >
           Warta<br />Rupa
         </h1>
         <p
-          className="mt-3 text-[11px] text-[#aaa] tracking-[0.18em] uppercase font-archivo"
+          className="mt-2 mb-6 text-[11px] text-[#aaa] tracking-[0.18em] uppercase font-archivo"
           style={{ fontWeight: 400 }}
         >
           capture the moment, make the news
         </p>
-      </div>
-
-      {/* ── THIN RULE ────────────────────────────────────── */}
-      <div className="mx-5 mb-6" style={{ height: '1px', backgroundColor: '#111' }} />
-
-      {/* ── HEADLINE ─────────────────────────────────────── */}
-      <div className="px-5 mb-6">
+        
         <h2
-          className="font-archivo text-[1.55rem] leading-[1.1] text-black"
+          className="font-archivo text-[1.5rem] leading-[1.1] text-black"
           style={{ fontWeight: 600, letterSpacing: '-0.025em' }}
         >
           {headline}
@@ -58,18 +52,18 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
       </div>
 
       {/* ── FOTO BESAR — full bleed, nempel ke tepi ──────── */}
-      <div className="relative w-full mb-0">
+      <div className="relative w-full h-[300px] shrink-0 border-y border-[#ddd]">
         <img
           src={mainPhotoSrc}
           alt="Foto Utama"
-          className="w-full aspect-[4/3] object-cover block"
+          className="w-full h-full object-cover block"
           style={{ filter: filterStyle }}
         />
 
-        {/* ── FOTO KECIL — mengambang di pojok kanan-bawah, overlap ── */}
+        {/* ── FOTO KECIL — mengambang ── */}
         <div
-          className="absolute bottom-0 right-4 translate-y-1/2"
-          style={{ width: '88px', height: '88px', border: '3px solid white' }}
+          className="absolute -bottom-6 right-6"
+          style={{ width: '80px', height: '80px', border: '3px solid white', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
         >
           <img
             src={smallPhotoSrc}
@@ -80,37 +74,24 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         </div>
       </div>
 
-      {/* ── ARTIKEL ──────────────────────────────────────── */}
-      {/* Padding kiri-kanan besar + margin top besar untuk whitespace */}
-      <div className="px-5 pt-14 pb-8">
-        <div
-          className="text-[10px] text-gray-400 uppercase tracking-[0.2em] mb-3 font-archivo"
-          style={{ fontWeight: 500 }}
-        >
-          Sorotan Hari Ini
+      {/* ── FOOTER ARTIKEL ───────────────────────────────── */}
+      <div className="px-5 pt-8 pb-3 shrink-0 flex items-end justify-between">
+        <div className="flex-1 pr-12">
+          <div
+            className="text-[9px] text-gray-400 uppercase tracking-[0.2em] mb-1 font-archivo"
+            style={{ fontWeight: 500 }}
+          >
+            Sorotan Hari Ini
+          </div>
+          <p className="font-garamond text-[12px] text-gray-700 leading-snug text-justify">
+            {article.substring(0, 160)}...
+          </p>
         </div>
-        <p className="font-garamond text-[13px] text-gray-700 leading-relaxed">
-          {article}
-        </p>
-      </div>
-
-      {/* ── FOOTER ───────────────────────────────────────── */}
-      <div
-        className="mx-5 mb-5 pt-4 flex justify-between items-center"
-        style={{ borderTop: '1px solid #ddd' }}
-      >
-        <span
-          className="text-[9px] text-[#bbb] tracking-[0.25em] uppercase font-archivo"
-          style={{ fontWeight: 400 }}
-        >
-          @warta.rupa
-        </span>
-        <span
-          className="text-[9px] text-[#bbb] tracking-[0.15em] uppercase font-archivo"
-          style={{ fontWeight: 400 }}
-        >
-          Editorial Edition
-        </span>
+        
+        <div className="flex flex-col items-end gap-1 text-[8px] text-[#bbb] tracking-[0.15em] uppercase font-archivo">
+          <span>@warta.rupa</span>
+          <span>Editorial Ed.</span>
+        </div>
       </div>
 
     </div>
