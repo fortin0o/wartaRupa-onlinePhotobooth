@@ -2,21 +2,22 @@ import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import NewspaperTemplate from './NewspaperTemplate';
 import PhotostripTemplate from './PhotostripTemplate';
+import { filters } from '../utils/filters';
 
-const ResultScreen = ({ template, photos, onReset }) => {
+const ResultScreen = ({ template, photos, selectedFilterId, onReset }) => {
   const templateRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
+
+  const filterStyle = filters[selectedFilterId] || 'none';
 
   useEffect(() => {
     const generateImage = async () => {
       if (!templateRef.current) return;
       
       try {
-        // Beri sedikit jeda agar DOM & font Google selesai dirender
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Render menggunakan html-to-image dengan pixelRatio 2 untuk hasil HD
         const dataUrl = await toPng(templateRef.current, { 
           cacheBust: true,
           pixelRatio: 2,
@@ -32,7 +33,7 @@ const ResultScreen = ({ template, photos, onReset }) => {
     };
 
     generateImage();
-  }, [template, photos]);
+  }, [template, photos, selectedFilterId]);
 
   const handleDownload = () => {
     if (!imageUrl) return;
@@ -50,14 +51,20 @@ const ResultScreen = ({ template, photos, onReset }) => {
       <div className="absolute left-[-9999px] top-[-9999px]">
         <div ref={templateRef}>
           {template === 'newspaper' ? (
-            <NewspaperTemplate bigPhoto={photos[0]} smallPhoto={photos[1]} />
+            <NewspaperTemplate 
+              bigPhoto={photos[0]} 
+              smallPhoto={photos[1]} 
+              filterStyle={filterStyle} 
+            />
           ) : (
-            <PhotostripTemplate photos={photos} />
+            <PhotostripTemplate 
+              photos={photos} 
+              filterStyle={filterStyle} 
+            />
           )}
         </div>
       </div>
 
-      {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-playfair font-bold mb-2">Hasil Akhir</h2>
         <p className="font-garamond text-gray-600">
@@ -65,7 +72,6 @@ const ResultScreen = ({ template, photos, onReset }) => {
         </p>
       </div>
 
-      {/* Konten Utama: Loading state vs Gambar Final */}
       {isGenerating ? (
         <div className="flex flex-col items-center justify-center p-12 bg-white rounded shadow-lg mb-8 min-w-[300px]">
           <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
@@ -73,7 +79,6 @@ const ResultScreen = ({ template, photos, onReset }) => {
         </div>
       ) : (
         <>
-          {/* Gambar Preview PNG yang sudah jadi */}
           <div className="mb-8 p-3 bg-white shadow-2xl border border-gray-200">
             <img 
               src={imageUrl} 
@@ -82,7 +87,6 @@ const ResultScreen = ({ template, photos, onReset }) => {
             />
           </div>
 
-          {/* Tombol Aksi */}
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
             <button 
               onClick={onReset}

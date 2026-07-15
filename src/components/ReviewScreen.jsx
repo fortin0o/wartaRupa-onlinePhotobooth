@@ -1,28 +1,47 @@
 import React, { useState } from 'react';
+import { filters, filterLabels } from '../utils/filters';
 
 const ReviewScreen = ({ photos, selectedTemplate, onRetake, onNext }) => {
-  // State untuk Newspaper: menentukan index mana yang jadi foto besar (default 0)
+  // State untuk Newspaper
   const [bigPhotoIndex, setBigPhotoIndex] = useState(0);
+  
+  // State Filter Foto
+  const [selectedFilterId, setSelectedFilterId] = useState('normal');
 
   const handleFinalize = () => {
     if (selectedTemplate === 'newspaper') {
-      // Susun urutan: [Foto Besar, Foto Kecil]
       const smallPhotoIndex = bigPhotoIndex === 0 ? 1 : 0;
-      onNext([photos[bigPhotoIndex], photos[smallPhotoIndex]]);
+      onNext([photos[bigPhotoIndex], photos[smallPhotoIndex]], selectedFilterId);
     } else {
-      // Photostrip tidak butuh ubah urutan
-      onNext(photos);
+      onNext(photos, selectedFilterId);
     }
   };
 
+  const currentFilterStyle = filters[selectedFilterId] || 'none';
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f4ecd8] px-4 py-12">
+    <div className="flex flex-col items-center min-h-screen bg-[#f4ecd8] px-4 py-8">
       
-      <div className="text-center mb-8">
-        <h2 className="text-4xl font-playfair font-bold mb-2">Review Foto</h2>
+      <div className="text-center mb-6">
+        <h2 className="text-4xl font-playfair font-bold mb-2">Review Foto & Filter</h2>
         <p className="font-garamond text-xl text-gray-700">
-          Cek kembali hasil jepretan Anda sebelum dicetak.
+          Tentukan filter warna dan cek kembali hasil jepretan Anda.
         </p>
+      </div>
+
+      {/* Pilihan Filter (UI Baris Tombol) */}
+      <div className="flex flex-wrap justify-center gap-3 w-full max-w-4xl mb-8">
+        {Object.keys(filters).map((fId) => (
+          <button 
+            key={fId}
+            onClick={() => setSelectedFilterId(fId)}
+            className={`px-5 py-2 border-2 border-black font-garamond font-bold tracking-wide transition-colors shadow-[2px_2px_0_0_#000] ${
+              selectedFilterId === fId ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'
+            }`}
+          >
+            {filterLabels[fId]}
+          </button>
+        ))}
       </div>
 
       {/* Grid Foto */}
@@ -41,9 +60,14 @@ const ReviewScreen = ({ photos, selectedTemplate, onRetake, onNext }) => {
                 </div>
               )}
 
-              {/* Tampilan Foto */}
+              {/* Tampilan Foto dengan Filter CSS secara Real-time */}
               <div className="w-full aspect-[4/3] bg-gray-200 border-2 border-gray-300 overflow-hidden mb-6 relative">
-                <img src={photo} alt={`Hasil ${index+1}`} className="w-full h-full object-cover" />
+                <img 
+                  src={photo} 
+                  alt={`Hasil ${index+1}`} 
+                  className="w-full h-full object-cover transition-all duration-300"
+                  style={{ filter: currentFilterStyle }} 
+                />
               </div>
               
               {/* Kontrol Foto */}
