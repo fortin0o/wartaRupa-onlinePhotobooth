@@ -115,7 +115,7 @@ const HomeScreen = ({ onSelectTemplate }) => {
           </div>
           
           <button 
-            onClick={() => onSelectTemplate('newspaper', 2)}
+            onClick={() => setShowNewspaperThemeSelection(true)}
             className="w-full py-4 border-2 border-black text-black font-garamond text-xl font-bold hover:bg-black hover:text-white transition-colors"
           >
             Pilih Template Ini
@@ -138,7 +138,7 @@ const HomeScreen = ({ onSelectTemplate }) => {
           </div>
           
           <button 
-            onClick={() => setShowNewspaperThemeSelection(true)}
+            onClick={() => setShowThemeSelection(true)}
             className="w-full py-4 border-2 border-black text-black font-garamond text-xl font-bold hover:bg-black hover:text-white transition-colors"
           >
             Pilih Template Ini
