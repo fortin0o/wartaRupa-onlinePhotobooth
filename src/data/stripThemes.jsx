@@ -4,6 +4,7 @@ import StripPolaroid from '../components/strips/StripPolaroid';
 import StripCute from '../components/strips/StripCute';
 import StripDenim from '../components/strips/StripDenim';
 import StripPolaroidStripes from '../components/strips/StripPolaroidStripes';
+import StripPlayfulBlob from '../components/strips/StripPlayfulBlob';
 
 
 export const stripThemes = [
@@ -42,5 +43,11 @@ export const stripThemes = [
     name: "Polaroid Stripes",
     component: StripPolaroidStripes,
     desc: "Pola checker & starburst"
+  },
+  {
+    id: "playfulblob",
+    name: "Playful Blob",
+    component: StripPlayfulBlob,
+    desc: "Blob organik & washi tape"
   }
 ];
