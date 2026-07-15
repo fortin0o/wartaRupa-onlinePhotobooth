@@ -101,7 +101,6 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
 
   const isRetakeMode = retakeIndex !== null;
   const currentPhotoNumber = isRetakeMode ? retakeIndex + 1 : confirmedPhotos.length + 1;
-  const aspectClass = template === 'newspaper' ? 'aspect-[3/4]' : 'aspect-[4/3]';
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#f4ecd8] px-4 py-8 relative">
@@ -124,8 +123,8 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
       {/* Box Kamera Container */}
       <div className="w-full max-w-[480px] bg-white border-4 border-black p-4 shadow-[8px_8px_0_0_#000]">
         
-        {/* Aspect Ratio Wrapper */}
-        <div className={`relative w-full ${aspectClass} bg-gray-900 border-2 border-gray-300 overflow-hidden flex items-center justify-center`}>
+        {/* Aspect Ratio Wrapper (4:3) */}
+        <div className="relative w-full aspect-[4/3] bg-gray-900 border-2 border-gray-300 overflow-hidden flex items-center justify-center">
           
           {!hasPermission ? (
             <div className="text-center p-6 text-white">

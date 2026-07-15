@@ -14,7 +14,7 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
   return (
     <div
-      className="bg-white text-black max-w-[380px] w-full mx-auto flex flex-col shadow-none box-border overflow-hidden"
+      className="bg-white text-black w-[480px] h-[640px] mx-auto flex flex-col shadow-none box-border overflow-hidden"
       style={{ border: '1px solid #ddd' }}
     >
 

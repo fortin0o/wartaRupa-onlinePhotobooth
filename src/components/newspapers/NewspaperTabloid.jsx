@@ -16,7 +16,7 @@ const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
   const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
 
   return (
-    <div className="bg-white border-4 border-black p-0 text-black max-w-[380px] w-full mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden">
+    <div className="bg-[#fcf8ed] text-black w-[480px] h-[640px] mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden relative">
 
       {/* ── HEADER STRIP ─────────────────────────────────── */}
       <div className="bg-[#d32f2f] flex justify-between items-center px-3 py-1 text-white text-[10px] font-black uppercase tracking-widest">

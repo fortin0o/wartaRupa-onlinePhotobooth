@@ -58,7 +58,7 @@ const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
   return (
     <div
-      className="text-black max-w-[380px] w-full mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden"
+      className="text-black w-[480px] h-[640px] mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden"
       style={{ ...noiseBg, border: '2px solid #555' }}
     >
 

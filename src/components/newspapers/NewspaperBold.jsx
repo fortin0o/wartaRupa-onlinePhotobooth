@@ -21,7 +21,7 @@ const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
   return (
     <div
-      className="text-white max-w-[380px] w-full mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden"
+      className="text-white w-[480px] h-[640px] mx-auto font-sans flex flex-col shadow-none box-border overflow-hidden"
       style={{ background: '#0a0a0a', border: '6px solid #f5d020' }}
     >
 

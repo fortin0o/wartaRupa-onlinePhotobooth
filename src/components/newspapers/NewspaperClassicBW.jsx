@@ -21,7 +21,7 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
   return (
     <div
-      className="bg-white text-black max-w-[380px] w-full mx-auto font-sans flex flex-col shadow-none box-border relative overflow-hidden"
+      className="bg-white text-black w-[480px] h-[640px] mx-auto font-sans flex flex-col shadow-none box-border relative overflow-hidden"
       style={{ border: '4px solid #111' }}
     >
 

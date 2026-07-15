@@ -2,79 +2,109 @@ import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
 
 const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline(), []);
+  const headline = useMemo(() => getRandomHeadline().substring(0, 30), []); // keep it short for this layout
   const article  = useMemo(() => getRandomArticle(), []);
   
-  const today = new Date().toLocaleDateString('id-ID', {
+  const today = new Date().toLocaleDateString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric'
-  });
+  }).toUpperCase();
 
   const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
   const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
 
   return (
-    <div className="bg-[#f4ecd8] border-2 border-black p-4 text-black max-w-[380px] w-full mx-auto font-sans flex flex-col shadow-none box-border">
+    <div 
+      className="bg-[#f0ebe1] text-[#1a1a1a] mx-auto font-sans flex flex-col shadow-none box-border relative overflow-hidden"
+      style={{ 
+        width: '480px', 
+        height: '640px', 
+        padding: '24px 28px' 
+      }}
+    >
       
-      <div className="flex justify-between items-center text-[10px] tracking-widest uppercase font-bold border-b-4 border-black pb-1 mb-3">
-        <span>Breaking News</span>
-        <span>Special Issue</span>
-      </div>
-      
-      <div className="text-center mb-3">
-        <h1 className="font-playfair text-5xl font-bold leading-none mb-1 tracking-tight">
+      {/* Top Header - THE SOCIETY */}
+      <div className="w-full flex flex-col items-center">
+        <div className="w-full h-[3px] bg-[#1a1a1a] mb-[2px]"></div>
+        <div className="w-full h-[1px] bg-[#1a1a1a] mb-2"></div>
+        
+        <h1 
+          className="font-playfair font-black text-center uppercase tracking-tighter"
+          style={{ fontSize: '4.5rem', lineHeight: '0.8', margin: '8px 0', transform: 'scaleY(1.3)' }}
+        >
           Warta Rupa
         </h1>
-        <p className="font-garamond italic text-[13px] text-gray-800">
-          capture the moment, make the news
-        </p>
+        
+        <div className="w-full h-[1px] bg-[#1a1a1a] mt-6 mb-[2px]"></div>
       </div>
       
-      <div className="flex justify-between items-center text-[11px] font-bold uppercase border-y border-black py-1.5 mb-4">
-        <span>Surakarta</span>
+      {/* Meta Bar */}
+      <div className="flex justify-between items-center text-[9px] font-black tracking-widest uppercase py-1.5 w-full">
+        <span>VOL. 19, NO.190</span>
+        <span className="text-xl leading-none">✻</span>
+        <span>WARTARUPA.COM</span>
+        <span className="text-xl leading-none">✻</span>
         <span>{today}</span>
       </div>
       
-      <h2 className="font-playfair font-black text-3xl uppercase text-center leading-[1.1] mb-4">
-        {headline}
+      <div className="w-full h-[1px] bg-[#1a1a1a] mb-[2px]"></div>
+      <div className="w-full h-[3px] bg-[#1a1a1a] mb-3"></div>
+      
+      {/* Breaking News */}
+      <h2 className="font-playfair font-black text-[2.75rem] uppercase text-center leading-[1] tracking-tight mb-3">
+        BREAKING NEWS
       </h2>
       
-      <div className="border-t border-black mb-3"></div>
+      <div className="w-full h-[2px] bg-[#1a1a1a] mb-4"></div>
       
-      <div className="mb-1 border border-black p-0.5">
-        <img 
-          src={mainPhotoSrc} 
-          alt="Foto Utama" 
-          className="w-full aspect-[3/4] object-cover" 
-          style={{ filter: filterStyle }}
-        />
-      </div>
-      
-      <div className="flex justify-between items-center text-[10px] uppercase text-gray-700 mb-5 font-bold">
-        <span>Candid moment</span>
-        <span>Vol. 01</span>
-      </div>
-      
-      <h3 className="text-xs uppercase font-bold mb-2 tracking-wide">
-        Sorotan Hari Ini
-      </h3>
-      
-      <div className="flex gap-3 mb-6 items-start">
-        <div className="w-[80px] h-[80px] shrink-0 border border-black p-0.5">
-          <img 
-            src={smallPhotoSrc} 
-            alt="Foto Kecil" 
-            className="w-full h-full object-cover" 
-            style={{ filter: filterStyle }}
-          />
+      {/* 2 Column Layout */}
+      <div className="flex gap-4 flex-1 overflow-hidden">
+        
+        {/* Left Column */}
+        <div className="flex-1 flex flex-col">
+          <h3 className="font-playfair font-bold text-[1rem] uppercase leading-tight tracking-tight mb-2">
+            {headline}
+          </h3>
+          <p className="font-garamond text-[10px] text-justify leading-snug mb-3">
+            {article.substring(0, 250)}...
+          </p>
+          <p className="font-garamond text-[10px] text-justify leading-snug mb-3">
+            {article.substring(250, 450)}...
+          </p>
+          
+          {/* Quote / Small Photo Box */}
+          <div className="mt-auto border-2 border-[#1a1a1a] p-2 flex flex-col items-center justify-center">
+            <img 
+              src={smallPhotoSrc} 
+              alt="Foto Kecil" 
+              className="w-full h-[80px] object-cover mb-2" 
+              style={{ filter: filterStyle, filter: 'grayscale(1) contrast(1.1)' }}
+            />
+            <span className="font-playfair font-bold text-[9px] uppercase text-center leading-tight">
+              "Candid moments captured in perfect unity."
+            </span>
+          </div>
         </div>
-        <div className="font-garamond text-[11px] text-justify leading-relaxed flex-1">
-          {article}
+        
+        {/* Right Column */}
+        <div className="flex-[1.2] flex flex-col">
+          <div className="border border-[#1a1a1a] p-1 mb-3">
+            <img 
+              src={mainPhotoSrc} 
+              alt="Foto Utama" 
+              className="w-full aspect-[4/3] object-cover" 
+              style={{ filter: filterStyle }}
+            />
+          </div>
+          <p className="font-garamond text-[10px] text-justify leading-snug mb-2">
+            {article.substring(450, 700)}...
+          </p>
+          <p className="font-garamond text-[10px] text-justify leading-snug mt-auto">
+            {article.substring(700, 850)}...
+          </p>
         </div>
+        
       </div>
-      
-      <div className="text-center text-[10px] text-gray-500 mt-auto pt-2 border-t border-gray-300">
-        @warta.rupa
-      </div>
+
     </div>
   );
 };
