@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 
-const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
+const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, onCaptureRetake, onBack }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   
   const [hasPermission, setHasPermission] = useState(true);
   const [cameraError, setCameraError] = useState(null);
   
-  // State alur baru
+  // State alur pengambilan foto berurutan
   const [confirmedPhotos, setConfirmedPhotos] = useState([]);
   const [currentDraft, setCurrentDraft] = useState(null);
   const [isCounting, setIsCounting] = useState(false);
@@ -34,7 +34,6 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
   useEffect(() => {
     initCamera();
     return () => {
-      // Cleanup camera on unmount
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach(track => track.stop());
@@ -50,10 +49,8 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
     
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    
     const ctx = canvas.getContext('2d');
     
-    // Mirror the image 
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -84,22 +81,29 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
   };
 
   const handleNext = () => {
+    // Mode Retake Individual
+    if (retakeIndex !== null) {
+      onCaptureRetake(currentDraft);
+      setCurrentDraft(null);
+      return;
+    }
+
+    // Mode Normal berurutan
     const newPhotos = [...confirmedPhotos, currentDraft];
     setConfirmedPhotos(newPhotos);
     setCurrentDraft(null);
     
-    // Jika slot sudah penuh, auto-lanjut ke screen berikutnya
+    // Jika slot sudah penuh
     if (newPhotos.length >= requiredPhotoCount) {
       onCapture(newPhotos);
     }
   };
 
-  const currentPhotoNumber = confirmedPhotos.length + 1;
+  const isRetakeMode = retakeIndex !== null;
+  const currentPhotoNumber = isRetakeMode ? retakeIndex + 1 : confirmedPhotos.length + 1;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#f4ecd8] px-4 py-8 relative">
-      
-      {/* Hidden Canvas */}
       <canvas ref={canvasRef} className="hidden" />
 
       {/* Header & Indikator */}
@@ -112,7 +116,7 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
           Kembali
         </button>
         <div className="font-playfair text-xl font-bold bg-white px-4 py-2 border-2 border-black shadow-[4px_4px_0_0_#000]">
-          Foto {Math.min(currentPhotoNumber, requiredPhotoCount)} dari {requiredPhotoCount}
+          {isRetakeMode ? `Ambil Ulang Foto Ke-${currentPhotoNumber}` : `Foto ${Math.min(currentPhotoNumber, requiredPhotoCount)} dari ${requiredPhotoCount}`}
         </div>
       </div>
 
@@ -135,7 +139,6 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
             </div>
           ) : (
             <>
-              {/* Live Video (selalu di belakang, tapi tetap aktif agar tidak black screen saat retake) */}
               <video 
                 ref={videoRef}
                 autoPlay 
@@ -144,7 +147,6 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
                 className={`absolute inset-0 w-full h-full object-cover -scale-x-100 ${currentDraft ? 'opacity-0' : 'opacity-100'}`}
               />
               
-              {/* Gambar Draft (menutupi video jika ada) */}
               {currentDraft && (
                 <img 
                   src={currentDraft} 
@@ -153,7 +155,6 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
                 />
               )}
 
-              {/* Countdown Overlay */}
               {countdown !== null && (
                 <div className="absolute inset-0 flex items-center justify-center z-20">
                   <div className="text-8xl font-playfair font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
@@ -169,7 +170,6 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
         {hasPermission && (
           <div className="mt-6 flex justify-center items-center h-16">
             {!currentDraft ? (
-              // Mode Live: Tombol Ambil Foto
               <button 
                 onClick={startCountdownAndCapture}
                 disabled={isCounting}
@@ -177,7 +177,6 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
                 title="Ambil Foto"
               ></button>
             ) : (
-              // Mode Review: Tombol Retake & Lanjut
               <div className="flex gap-4 w-full">
                 <button 
                   onClick={handleRetake}
@@ -189,7 +188,7 @@ const CameraScreen = ({ requiredPhotoCount = 3, onCapture, onBack }) => {
                   onClick={handleNext}
                   className="flex-1 py-3 bg-black text-white border-2 border-black font-garamond text-lg font-bold hover:bg-gray-800 transition-colors shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
                 >
-                  {currentPhotoNumber >= requiredPhotoCount ? 'Selesai' : 'Lanjut'}
+                  {isRetakeMode ? 'Simpan' : (currentPhotoNumber >= requiredPhotoCount ? 'Selesai' : 'Lanjut')}
                 </button>
               </div>
             )}

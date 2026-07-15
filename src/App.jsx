@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import HomeScreen from './components/HomeScreen';
 import CameraScreen from './components/CameraScreen';
-import PreviewScreen from './components/PreviewScreen';
+import ReviewScreen from './components/ReviewScreen';
 import ResultScreen from './components/ResultScreen';
 
 function App() {
@@ -9,8 +9,10 @@ function App() {
   const [photos, setPhotos] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [requiredPhotoCount, setRequiredPhotoCount] = useState(0);
+  
+  // State untuk melacak mode "retake" individual
+  const [retakeIndex, setRetakeIndex] = useState(null);
 
-  // Navigation handlers
   const handleSelectTemplate = (template, count) => {
     setSelectedTemplate(template);
     setRequiredPhotoCount(count);
@@ -20,13 +22,32 @@ function App() {
 
   const handleCapture = (capturedPhotos) => {
     setPhotos(capturedPhotos);
-    setCurrentScreen('preview');
+    setCurrentScreen('review');
+  };
+
+  const handleCaptureRetake = (newPhoto) => {
+    const updatedPhotos = [...photos];
+    updatedPhotos[retakeIndex] = newPhoto;
+    setPhotos(updatedPhotos);
+    setRetakeIndex(null);
+    setCurrentScreen('review');
+  };
+
+  const handleRetakeRequest = (index) => {
+    setRetakeIndex(index);
+    setCurrentScreen('camera');
+  };
+
+  const handleFinalizeReview = (finalPhotos) => {
+    setPhotos(finalPhotos); // Update dengan urutan foto yang sudah fix
+    setCurrentScreen('result');
   };
 
   const handleReset = () => {
     setPhotos([]);
     setSelectedTemplate(null);
     setRequiredPhotoCount(0);
+    setRetakeIndex(null);
     setCurrentScreen('home');
   };
 
@@ -39,21 +60,19 @@ function App() {
       {currentScreen === 'camera' && (
         <CameraScreen 
           requiredPhotoCount={requiredPhotoCount}
-          onCapture={handleCapture} 
+          retakeIndex={retakeIndex}
+          onCapture={handleCapture}
+          onCaptureRetake={handleCaptureRetake}
           onBack={handleReset} 
         />
       )}
       
-      {currentScreen === 'preview' && (
-        <PreviewScreen 
+      {currentScreen === 'review' && (
+        <ReviewScreen 
           photos={photos} 
-          onSelectTemplate={(template) => {
-            // Untuk sementara mempertahankan kompatibilitas dengan PreviewScreen lama
-            // Nanti file ini akan dirombak jadi ReviewScreen
-            setSelectedTemplate(template);
-            setCurrentScreen('result');
-          }} 
-          onBack={() => setCurrentScreen('camera')} 
+          selectedTemplate={selectedTemplate}
+          onRetake={handleRetakeRequest}
+          onNext={handleFinalizeReview} 
         />
       )}
       
