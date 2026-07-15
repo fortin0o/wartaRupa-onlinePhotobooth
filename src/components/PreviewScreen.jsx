@@ -1,42 +1,79 @@
 import React from 'react';
+import NewspaperTemplate from './NewspaperTemplate';
+import PhotostripTemplate from './PhotostripTemplate';
 
-const PreviewScreen = ({ photos, onSelectTemplate, onBack }) => {
+const PreviewScreen = ({ photos = [], onSelectTemplate, onBack }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f4ecd8] p-4">
-      <h2 className="text-3xl font-playfair mb-8 font-bold">Pilih Template</h2>
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 py-10 px-4">
       
-      <div className="flex flex-col md:flex-row gap-8 w-full max-w-4xl justify-center">
-        {/* Template Newspaper */}
-        <div 
-          className="flex-1 bg-white p-6 shadow-lg cursor-pointer hover:shadow-xl transition-shadow border border-gray-200"
-          onClick={() => onSelectTemplate('newspaper')}
-        >
-          <h3 className="font-playfair text-xl font-bold mb-4 text-center border-b-2 border-black pb-2">Newspaper</h3>
-          <div className="aspect-[3/4] bg-gray-100 flex flex-col items-center justify-center p-4">
-            <p className="font-garamond text-gray-500">Preview Newspaper</p>
-            <p className="text-xs mt-2 text-gray-400">1 Foto Besar, 1 Kecil + Teks</p>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-playfair font-bold mb-2">Pilih Template</h2>
+        <p className="font-garamond text-gray-600">
+          Bagaimana Anda ingin mengabadikan momen ini?
+        </p>
+      </div>
+      
+      {/* Template Previews Container */}
+      <div className="flex flex-col md:flex-row gap-12 justify-center items-start w-full max-w-5xl mb-12">
+        
+        {/* Newspaper Option */}
+        <div className="flex flex-col items-center w-full md:w-1/2">
+          <div className="mb-4 text-center">
+            <h3 className="font-playfair text-xl font-bold">Newspaper</h3>
+            <p className="text-sm font-garamond text-gray-500">1 Foto Besar & 1 Foto Kecil</p>
           </div>
+          
+          {/* Scale wrapper to make it a preview thumbnail */}
+          <div className="w-full max-w-[380px] bg-white shadow-xl hover:shadow-2xl transition-shadow cursor-pointer rounded-sm overflow-hidden" 
+               onClick={() => onSelectTemplate('newspaper')}
+               title="Pilih Newspaper">
+            <div className="pointer-events-none origin-top" style={{ transform: 'scale(0.9)' }}>
+              <NewspaperTemplate photos={photos} />
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => onSelectTemplate('newspaper')}
+            className="mt-6 px-6 py-2 bg-black text-white rounded font-garamond hover:bg-gray-800 transition"
+          >
+            Pilih Template Ini
+          </button>
         </div>
 
-        {/* Template Photostrip */}
-        <div 
-          className="flex-1 bg-white p-6 shadow-lg cursor-pointer hover:shadow-xl transition-shadow border border-gray-200"
-          onClick={() => onSelectTemplate('photostrip')}
-        >
-          <h3 className="font-playfair text-xl font-bold mb-4 text-center border-b-2 border-black pb-2">Photostrip</h3>
-          <div className="aspect-[1/3] bg-gray-100 flex flex-col items-center justify-center p-4 mx-auto w-1/2">
-            <p className="font-garamond text-gray-500 text-center">Preview Photostrip</p>
-            <p className="text-xs mt-2 text-gray-400 text-center">3 Foto Vertikal</p>
+        {/* Photostrip Option */}
+        <div className="flex flex-col items-center w-full md:w-1/2">
+          <div className="mb-4 text-center">
+            <h3 className="font-playfair text-xl font-bold">Photostrip</h3>
+            <p className="text-sm font-garamond text-gray-500">3 Foto Klasik</p>
           </div>
+          
+          {/* Scale wrapper */}
+          <div className="bg-white shadow-xl hover:shadow-2xl transition-shadow cursor-pointer p-4 rounded-sm"
+               onClick={() => onSelectTemplate('photostrip')}
+               title="Pilih Photostrip">
+            <div className="pointer-events-none">
+              <PhotostripTemplate photos={photos} />
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => onSelectTemplate('photostrip')}
+            className="mt-6 px-6 py-2 bg-black text-white rounded font-garamond hover:bg-gray-800 transition"
+          >
+            Pilih Template Ini
+          </button>
         </div>
+        
       </div>
 
+      {/* Back Button */}
       <button 
         onClick={onBack}
-        className="mt-12 px-8 py-3 border-2 border-black rounded hover:bg-black hover:text-white transition-colors font-garamond text-lg"
+        className="px-8 py-3 border-2 border-gray-400 text-gray-600 rounded hover:bg-gray-200 hover:text-black transition-colors font-garamond text-lg mt-auto"
       >
-        Kembali ke Kamera
+        Ambil Ulang Foto
       </button>
+
     </div>
   );
 };
