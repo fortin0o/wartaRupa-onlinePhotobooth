@@ -2,6 +2,8 @@ import StripClassic from '../components/strips/StripClassic';
 import StripFilmReel from '../components/strips/StripFilmReel';
 import StripPolaroid from '../components/strips/StripPolaroid';
 import StripCute from '../components/strips/StripCute';
+import StripDenim from '../components/strips/StripDenim';
+
 
 export const stripThemes = [
   { 
@@ -27,5 +29,11 @@ export const stripThemes = [
     name: "Cute Pastel", 
     component: StripCute, 
     desc: "Warna ceria & membulat" 
+  },
+  {
+    id: "denim",
+    name: "Denim Scrapbook",
+    component: StripDenim,
+    desc: "Gaya jahitan denim"
   }
 ];
