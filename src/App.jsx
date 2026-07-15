@@ -8,9 +8,13 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
   const [photos, setPhotos] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [requiredPhotoCount, setRequiredPhotoCount] = useState(0);
 
   // Navigation handlers
-  const handleStart = () => {
+  const handleSelectTemplate = (template, count) => {
+    setSelectedTemplate(template);
+    setRequiredPhotoCount(count);
+    setPhotos([]); // Reset foto jika ada sisa dari sesi sebelumnya
     setCurrentScreen('camera');
   };
 
@@ -19,34 +23,36 @@ function App() {
     setCurrentScreen('preview');
   };
 
-  const handleSelectTemplate = (template) => {
-    setSelectedTemplate(template);
-    setCurrentScreen('result');
-  };
-
   const handleReset = () => {
     setPhotos([]);
     setSelectedTemplate(null);
+    setRequiredPhotoCount(0);
     setCurrentScreen('home');
   };
 
   return (
-    <div className="min-h-screen font-sans text-black">
+    <div className="min-h-screen font-sans text-black bg-gray-100">
       {currentScreen === 'home' && (
-        <HomeScreen onStart={handleStart} />
+        <HomeScreen onSelectTemplate={handleSelectTemplate} />
       )}
       
       {currentScreen === 'camera' && (
         <CameraScreen 
           onCapture={handleCapture} 
-          onBack={() => setCurrentScreen('home')} 
+          onBack={handleReset} 
+          // Nanti di Tahap berikutnya (CameraScreen) kita bisa passing requiredPhotoCount ke sini
         />
       )}
       
       {currentScreen === 'preview' && (
         <PreviewScreen 
           photos={photos} 
-          onSelectTemplate={handleSelectTemplate} 
+          onSelectTemplate={(template) => {
+            // Untuk sementara mempertahankan kompatibilitas dengan PreviewScreen lama
+            // Nanti file ini akan dirombak jadi ReviewScreen
+            setSelectedTemplate(template);
+            setCurrentScreen('result');
+          }} 
           onBack={() => setCurrentScreen('camera')} 
         />
       )}
