@@ -10,15 +10,15 @@ function App() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [requiredPhotoCount, setRequiredPhotoCount] = useState(0);
   
-  // State untuk melacak mode "retake" individual
   const [retakeIndex, setRetakeIndex] = useState(null);
-  // State untuk melacak filter yang dipilih di ReviewScreen
   const [selectedFilterId, setSelectedFilterId] = useState('normal');
+  const [selectedStripTheme, setSelectedStripTheme] = useState(null);
 
-  const handleSelectTemplate = (template, count) => {
+  const handleSelectTemplate = (template, count, themeId = null) => {
     setSelectedTemplate(template);
     setRequiredPhotoCount(count);
-    setPhotos([]); // Reset foto jika ada sisa dari sesi sebelumnya
+    setSelectedStripTheme(themeId);
+    setPhotos([]); 
     setCurrentScreen('camera');
   };
 
@@ -41,8 +41,8 @@ function App() {
   };
 
   const handleFinalizeReview = (finalPhotos, filterId) => {
-    setPhotos(finalPhotos); // Update dengan urutan foto yang sudah fix
-    setSelectedFilterId(filterId); // Simpan pilihan filter
+    setPhotos(finalPhotos); 
+    setSelectedFilterId(filterId); 
     setCurrentScreen('result');
   };
 
@@ -52,6 +52,7 @@ function App() {
     setRequiredPhotoCount(0);
     setRetakeIndex(null);
     setSelectedFilterId('normal');
+    setSelectedStripTheme(null);
     setCurrentScreen('home');
   };
 
@@ -82,7 +83,8 @@ function App() {
       
       {currentScreen === 'result' && (
         <ResultScreen 
-          template={selectedTemplate} 
+          template={selectedTemplate}
+          stripThemeId={selectedStripTheme}
           photos={photos} 
           selectedFilterId={selectedFilterId}
           onReset={handleReset} 

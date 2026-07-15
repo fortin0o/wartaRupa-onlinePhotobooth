@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 import NewspaperTemplate from './NewspaperTemplate';
-import PhotostripTemplate from './PhotostripTemplate';
+import { stripThemes } from '../data/stripThemes';
 import { filters } from '../utils/filters';
 
-const ResultScreen = ({ template, photos, selectedFilterId, onReset }) => {
+const ResultScreen = ({ template, stripThemeId, photos, selectedFilterId, onReset }) => {
   const templateRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
@@ -44,6 +44,11 @@ const ResultScreen = ({ template, photos, selectedFilterId, onReset }) => {
     link.click();
   };
 
+  // Tentukan komponen mana yang dirender jika Photostrip
+  const StripComponent = stripThemeId 
+    ? (stripThemes.find(t => t.id === stripThemeId)?.component || stripThemes[0].component)
+    : null;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       
@@ -56,12 +61,12 @@ const ResultScreen = ({ template, photos, selectedFilterId, onReset }) => {
               smallPhoto={photos[1]} 
               filterStyle={filterStyle} 
             />
-          ) : (
-            <PhotostripTemplate 
+          ) : StripComponent ? (
+            <StripComponent 
               photos={photos} 
               filterStyle={filterStyle} 
             />
-          )}
+          ) : null}
         </div>
       </div>
 
