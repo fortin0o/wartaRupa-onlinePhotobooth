@@ -3,6 +3,7 @@ import StripFilmReel from '../components/strips/StripFilmReel';
 import StripPolaroid from '../components/strips/StripPolaroid';
 import StripCute from '../components/strips/StripCute';
 import StripDenim from '../components/strips/StripDenim';
+import StripPolaroidStripes from '../components/strips/StripPolaroidStripes';
 
 
 export const stripThemes = [
@@ -35,5 +36,11 @@ export const stripThemes = [
     name: "Denim Scrapbook",
     component: StripDenim,
     desc: "Gaya jahitan denim"
+  },
+  {
+    id: "polaroidstripes",
+    name: "Polaroid Stripes",
+    component: StripPolaroidStripes,
+    desc: "Pola checker & starburst"
   }
 ];
