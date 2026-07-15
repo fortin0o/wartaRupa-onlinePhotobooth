@@ -73,6 +73,7 @@ function App() {
       
       {currentScreen === 'camera' && (
         <CameraScreen 
+          template={selectedTemplate}
           requiredPhotoCount={requiredPhotoCount}
           retakeIndex={retakeIndex}
           onCapture={handleCapture}
