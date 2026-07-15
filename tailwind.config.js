@@ -12,6 +12,7 @@ export default {
       fontFamily: {
         playfair: ['"Playfair Display"', 'serif'],
         garamond: ['"EB Garamond"', 'serif'],
+        archivo: ['"Archivo"', 'sans-serif'],
       }
     },
   },
