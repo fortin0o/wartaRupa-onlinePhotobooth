@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../data/newspaperContent';
 
-const NewspaperTemplate = ({ photos = [], city = "Surakarta" }) => {
+const NewspaperTemplate = ({ bigPhoto, smallPhoto, city = "Surakarta" }) => {
   // Gunakan useMemo agar judul dan artikel tidak berubah-ubah saat re-render
   const headline = useMemo(() => getRandomHeadline(), []);
   const article = useMemo(() => getRandomArticle(), []);
@@ -13,9 +13,9 @@ const NewspaperTemplate = ({ photos = [], city = "Surakarta" }) => {
     year: 'numeric'
   });
 
-  // Pastikan kita punya fallback image jika props photos kosong
-  const mainPhoto = photos[0] || 'https://via.placeholder.com/400x300?text=Foto+Utama';
-  const smallPhoto = photos[1] || 'https://via.placeholder.com/150?text=Foto+Kecil';
+  // Pastikan kita punya fallback image jika props kosong
+  const mainPhotoSrc = bigPhoto || 'https://via.placeholder.com/400x300?text=Foto+Besar';
+  const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
 
   return (
     <div id="newspaper-template" className="bg-[#f4ecd8] border-2 border-black p-4 text-black max-w-[380px] w-full mx-auto font-sans flex flex-col shadow-none">
@@ -53,7 +53,7 @@ const NewspaperTemplate = ({ photos = [], city = "Surakarta" }) => {
       {/* 7. Foto Besar */}
       <div className="mb-1 border border-black p-0.5">
         <img 
-          src={mainPhoto} 
+          src={mainPhotoSrc} 
           alt="Foto Utama" 
           className="w-full aspect-[4/3] object-cover grayscale sepia-[0.2]" 
         />
@@ -74,7 +74,7 @@ const NewspaperTemplate = ({ photos = [], city = "Surakarta" }) => {
       <div className="flex gap-3 mb-6 items-start">
         <div className="w-[80px] h-[80px] shrink-0 border border-black p-0.5">
           <img 
-            src={smallPhoto} 
+            src={smallPhotoSrc} 
             alt="Foto Kecil" 
             className="w-full h-full object-cover grayscale sepia-[0.2]" 
           />

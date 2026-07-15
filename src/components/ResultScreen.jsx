@@ -20,7 +20,7 @@ const ResultScreen = ({ template, photos, onReset }) => {
         const dataUrl = await toPng(templateRef.current, { 
           cacheBust: true,
           pixelRatio: 2,
-          backgroundColor: '#ffffff' // Tambahan pengaman fallback background
+          backgroundColor: '#ffffff'
         });
         
         setImageUrl(dataUrl);
@@ -50,7 +50,7 @@ const ResultScreen = ({ template, photos, onReset }) => {
       <div className="absolute left-[-9999px] top-[-9999px]">
         <div ref={templateRef}>
           {template === 'newspaper' ? (
-            <NewspaperTemplate photos={photos} />
+            <NewspaperTemplate bigPhoto={photos[0]} smallPhoto={photos[1]} />
           ) : (
             <PhotostripTemplate photos={photos} />
           )}
