@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
 
 const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline().substring(0, 30), []); // keep it short for this layout
+  const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 5).join(' '), []); // keep it short for this layout
   const article  = useMemo(() => getRandomArticle(), []);
   
   const today = new Date().toLocaleDateString('en-GB', {
@@ -65,10 +65,10 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
             {headline}
           </h3>
           <p className="font-garamond text-[10px] text-justify leading-snug mb-3">
-            {article.substring(0, 250)}...
+            {article.split(' ').slice(0, 35).join(' ')}...
           </p>
           <p className="font-garamond text-[10px] text-justify leading-snug mb-3">
-            {article.substring(250, 450)}...
+            {article.split(' ').slice(35, 65).join(' ')}...
           </p>
           
           {/* Quote / Small Photo Box */}
@@ -96,10 +96,10 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
             />
           </div>
           <p className="font-garamond text-[10px] text-justify leading-snug mb-2">
-            {article.substring(450, 700)}...
+            {article.split(' ').slice(65, 100).join(' ')}...
           </p>
           <p className="font-garamond text-[10px] text-justify leading-snug mt-auto">
-            {article.substring(700, 850)}...
+            {article.split(' ').slice(100, 125).join(' ')}...
           </p>
         </div>
         

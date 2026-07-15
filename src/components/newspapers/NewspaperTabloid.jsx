@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
 
 const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline().substring(0, 35), []);
+  const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 6).join(' '), []);
   const article  = useMemo(() => getRandomArticle(), []);
   
   const today = new Date().toLocaleDateString('id-ID', {
@@ -68,7 +68,7 @@ const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
               Fakta Mengejutkan
             </h3>
             <p className="font-sans text-[11px] text-justify font-medium leading-snug">
-              {article.substring(0, 300)}...
+              {article.split(' ').slice(0, 45).join(' ')}...
             </p>
           </div>
           

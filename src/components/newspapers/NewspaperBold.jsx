@@ -5,7 +5,7 @@ import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent
 const ROTATE_OPTIONS = [-2, -1.5, -1, 0.5, 1, 1.5, 2];
 
 const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline().substring(0, 35), []);
+  const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 6).join(' '), []);
   const article  = useMemo(() => getRandomArticle(), []);
   const headlineRotate = useMemo(
     () => ROTATE_OPTIONS[Math.floor(Math.random() * ROTATE_OPTIONS.length)],
@@ -104,7 +104,7 @@ const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
           </div>
           
           <p className="font-garamond text-[12px] text-justify leading-snug flex-1 text-white pr-1">
-            {article.substring(0, 360)}...
+            {article.split(' ').slice(0, 50).join(' ')}...
           </p>
         </div>
 

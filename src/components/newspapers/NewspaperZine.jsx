@@ -14,7 +14,7 @@ const WASHI_TAPES = [
 const stableRand = (index, mod) => (index * 2654435761 + 17) % mod;
 
 const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline().substring(0, 30), []);
+  const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 5).join(' '), []);
   const article  = useMemo(() => getRandomArticle(), []);
 
   const today = new Date().toLocaleDateString('id-ID', {
@@ -118,7 +118,7 @@ const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
               [ sorotan hari ini ]
             </span>
             <p className="text-[11px] text-justify leading-snug flex-1 text-black" style={{ fontFamily: '"Courier New", monospace' }}>
-              {article.substring(0, 300)}...
+              {article.split(' ').slice(0, 40).join(' ')}...
             </p>
           </div>
         </div>
