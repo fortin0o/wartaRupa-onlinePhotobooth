@@ -13,12 +13,20 @@ function App() {
   const [retakeIndex, setRetakeIndex] = useState(null);
   const [selectedFilterId, setSelectedFilterId] = useState('normal');
   const [selectedStripTheme, setSelectedStripTheme] = useState(null);
+  const [selectedNewspaperTheme, setSelectedNewspaperTheme] = useState(null);
 
   const handleSelectTemplate = (template, count, themeId = null) => {
     setSelectedTemplate(template);
     setRequiredPhotoCount(count);
-    setSelectedStripTheme(themeId);
-    setPhotos([]); 
+    // themeId is mutually exclusive: one will be set, the other cleared
+    if (template === 'photostrip') {
+      setSelectedStripTheme(themeId);
+      setSelectedNewspaperTheme(null);
+    } else if (template === 'newspaper') {
+      setSelectedNewspaperTheme(themeId);
+      setSelectedStripTheme(null);
+    }
+    setPhotos([]);
     setCurrentScreen('camera');
   };
 
@@ -53,6 +61,7 @@ function App() {
     setRetakeIndex(null);
     setSelectedFilterId('normal');
     setSelectedStripTheme(null);
+    setSelectedNewspaperTheme(null);
     setCurrentScreen('home');
   };
 
@@ -85,6 +94,7 @@ function App() {
         <ResultScreen 
           template={selectedTemplate}
           stripThemeId={selectedStripTheme}
+          newspaperThemeId={selectedNewspaperTheme}
           photos={photos} 
           selectedFilterId={selectedFilterId}
           onReset={handleReset} 

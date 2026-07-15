@@ -1,58 +1,84 @@
 import React, { useState } from 'react';
 import { stripThemes } from '../data/stripThemes';
+import { newspaperThemes } from '../data/newspaperThemes';
 
 const HomeScreen = ({ onSelectTemplate }) => {
   const [showThemeSelection, setShowThemeSelection] = useState(false);
+  const [showNewspaperThemeSelection, setShowNewspaperThemeSelection] = useState(false);
+
+  // ── Shared: render a theme-selection grid ─────────────────────────────────
+  const ThemeGrid = ({ themes, templateType, photoCount, onBack, bgColor = 'bg-[#f4ecd8]', previewScale = 0.62, previewH = 'h-[280px]' }) => (
+    <div className={`flex flex-col items-center min-h-screen ${bgColor} py-12 px-4`}>
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-playfair font-bold mb-4">
+          Pilih Tema {templateType === 'photostrip' ? 'Photostrip' : 'Newspaper'}
+        </h2>
+        <p className="font-garamond italic text-gray-700">
+          {themes.length} tema tersedia — pilih yang paling sesuai mood-mu.
+        </p>
+      </div>
+
+      <div
+        className="w-full max-w-7xl gap-5 items-stretch"
+        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
+      >
+        {themes.map(theme => {
+          const ThemeComponent = theme.component;
+          return (
+            <div
+              key={theme.id}
+              onClick={() => onSelectTemplate(templateType, photoCount, theme.id)}
+              className="flex flex-col items-center h-full bg-white border border-gray-300 p-4 transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+            >
+              <div className="w-full text-center mb-4">
+                <h3 className="font-playfair text-lg font-bold border-b-2 border-black inline-block pb-1">{theme.name}</h3>
+                <p className="text-xs font-garamond text-gray-500 mt-1">{theme.desc}</p>
+              </div>
+
+              <div className={`pointer-events-none flex justify-center mb-4 overflow-hidden w-full ${previewH}`}>
+                <div className="origin-top" style={{ transform: `scale(${previewScale})` }}>
+                  <ThemeComponent />
+                </div>
+              </div>
+
+              <button className="w-full py-2.5 bg-black text-white font-garamond font-bold mt-auto text-sm hover:bg-gray-800 transition-colors">
+                Pilih Tema
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={onBack}
+        className="mt-12 px-8 py-3 border-2 border-black font-garamond font-bold hover:bg-gray-200 transition-colors"
+      >
+        Kembali ke Menu Utama
+      </button>
+    </div>
+  );
 
   if (showThemeSelection) {
     return (
-      <div className="flex flex-col items-center min-h-screen bg-[#f4ecd8] py-12 px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-playfair font-bold mb-4">Pilih Tema Photostrip</h2>
-          <p className="font-garamond italic text-gray-700">
-            {stripThemes.length} tema tersedia — pilih yang paling sesuai mood-mu.
-          </p>
-        </div>
-        
-        <div
-          className="w-full max-w-7xl gap-5 items-stretch"
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
-        >
-          {stripThemes.map(theme => {
-            const ThemeComponent = theme.component;
-            return (
-              <div 
-                key={theme.id} 
-                onClick={() => onSelectTemplate('photostrip', 3, theme.id)}
-                className="flex flex-col items-center h-full bg-white border border-gray-300 p-4 transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
-              >
-                <div className="w-full text-center mb-4">
-                  <h3 className="font-playfair text-lg font-bold border-b-2 border-black inline-block pb-1">{theme.name}</h3>
-                  <p className="text-xs font-garamond text-gray-500 mt-1">{theme.desc}</p>
-                </div>
-                
-                {/* Visual Preview menggunakan komponen aslinya yang di-scale down */}
-                <div className="pointer-events-none flex justify-center mb-4 overflow-hidden w-full h-[280px]">
-                  <div className="origin-top" style={{ transform: 'scale(0.62)' }}>
-                    <ThemeComponent />
-                  </div>
-                </div>
-                
-                <button className="w-full py-2.5 bg-black text-white font-garamond font-bold mt-auto text-sm hover:bg-gray-800 transition-colors">
-                  Pilih Tema
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        
-        <button 
-          onClick={() => setShowThemeSelection(false)} 
-          className="mt-12 px-8 py-3 border-2 border-black font-garamond font-bold hover:bg-gray-200 transition-colors"
-        >
-          Kembali ke Menu Utama
-        </button>
-      </div>
+      <ThemeGrid
+        themes={stripThemes}
+        templateType="photostrip"
+        photoCount={3}
+        onBack={() => setShowThemeSelection(false)}
+      />
+    );
+  }
+
+  if (showNewspaperThemeSelection) {
+    return (
+      <ThemeGrid
+        themes={newspaperThemes}
+        templateType="newspaper"
+        photoCount={2}
+        onBack={() => setShowNewspaperThemeSelection(false)}
+        previewScale={0.58}
+        previewH="h-[300px]"
+      />
     );
   }
 
@@ -112,7 +138,7 @@ const HomeScreen = ({ onSelectTemplate }) => {
           </div>
           
           <button 
-            onClick={() => setShowThemeSelection(true)}
+            onClick={() => setShowNewspaperThemeSelection(true)}
             className="w-full py-4 border-2 border-black text-black font-garamond text-xl font-bold hover:bg-black hover:text-white transition-colors"
           >
             Pilih Template Ini

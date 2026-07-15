@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
-import NewspaperTemplate from './NewspaperTemplate';
 import { stripThemes } from '../data/stripThemes';
+import { newspaperThemes } from '../data/newspaperThemes';
 import { filters } from '../utils/filters';
 
-const ResultScreen = ({ template, stripThemeId, photos, selectedFilterId, onReset }) => {
+const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, selectedFilterId, onReset }) => {
   const templateRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
@@ -44,9 +44,14 @@ const ResultScreen = ({ template, stripThemeId, photos, selectedFilterId, onRese
     link.click();
   };
 
-  // Tentukan komponen mana yang dirender jika Photostrip
-  const StripComponent = stripThemeId 
+  // Resolve strip component
+  const StripComponent = stripThemeId
     ? (stripThemes.find(t => t.id === stripThemeId)?.component || stripThemes[0].component)
+    : null;
+
+  // Resolve newspaper component
+  const NewspaperComponent = template === 'newspaper'
+    ? (newspaperThemes.find(t => t.id === newspaperThemeId)?.component || newspaperThemes[0].component)
     : null;
 
   return (
@@ -55,16 +60,16 @@ const ResultScreen = ({ template, stripThemeId, photos, selectedFilterId, onRese
       {/* Hidden Container: Target render untuk html-to-image */}
       <div className="absolute left-[-9999px] top-[-9999px]">
         <div ref={templateRef}>
-          {template === 'newspaper' ? (
-            <NewspaperTemplate 
-              bigPhoto={photos[0]} 
-              smallPhoto={photos[1]} 
-              filterStyle={filterStyle} 
+          {template === 'newspaper' && NewspaperComponent ? (
+            <NewspaperComponent
+              bigPhoto={photos[0]}
+              smallPhoto={photos[1]}
+              filterStyle={filterStyle}
             />
           ) : StripComponent ? (
-            <StripComponent 
-              photos={photos} 
-              filterStyle={filterStyle} 
+            <StripComponent
+              photos={photos}
+              filterStyle={filterStyle}
             />
           ) : null}
         </div>
