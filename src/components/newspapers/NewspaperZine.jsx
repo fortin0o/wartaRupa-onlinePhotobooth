@@ -150,7 +150,7 @@ const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
           <img
             src={mainPhotoSrc}
             alt="Foto Utama"
-            className="w-full aspect-[3/4] object-cover block"
+            className="w-full aspect-[4/3] object-cover block"
             style={{ filter: filterStyle }}
           />
         </div>

@@ -86,7 +86,7 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         <img
           src={mainPhotoSrc}
           alt="Foto Utama"
-          className="w-full aspect-[3/4] object-cover"
+          className="w-full aspect-[4/3] object-cover"
           style={{ filter: bwFilter }}
         />
       </div>
