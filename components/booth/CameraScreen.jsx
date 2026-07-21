@@ -1,8 +1,10 @@
 ﻿import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { getSupportedRecordingMimeType } from '../../utils/videoExport';
 
 // â”€â”€â”€ Named Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const COUNTDOWN_SECONDS = 3;
 const JPEG_QUALITY = 0.9;
+const CLIP_START_AT_COUNTDOWN = 2; // mulai rekam saat hitung mundur menyentuh angka ini (~2 detik sebelum jepret)
 
 /** Kembalikan pesan error yang spesifik per tipe DOMException kamera. */
 const getCameraErrorMessage = (err) => {
@@ -28,9 +30,14 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
   
   // State alur pengambilan foto berurutan
   const [confirmedPhotos, setConfirmedPhotos] = useState([]);
+  const [confirmedClips, setConfirmedClips] = useState([]);
   const [currentDraft, setCurrentDraft] = useState(null);
+  const [currentDraftClip, setCurrentDraftClip] = useState(null);
   const [isCounting, setIsCounting] = useState(false);
   const [countdown, setCountdown] = useState(null);
+
+  const recorderRef = useRef(null);
+  const clipChunksRef = useRef([]);
 
   const initCamera = useCallback(async () => {
     setCameraError(null);
@@ -56,12 +63,41 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
   useEffect(() => {
     initCamera();
     return () => {
+      if (recorderRef.current && recorderRef.current.state !== 'inactive') {
+        recorderRef.current.stop();
+      }
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach(track => track.stop());
       }
     };
   }, [initCamera]);
+
+  const startClipRecording = () => {
+    const stream = videoRef.current?.srcObject;
+    const mimeType = getSupportedRecordingMimeType();
+    if (!stream || !mimeType) return;
+
+    clipChunksRef.current = [];
+    const recorder = new MediaRecorder(stream, { mimeType });
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) clipChunksRef.current.push(e.data);
+    };
+    recorder.start();
+    recorderRef.current = recorder;
+  };
+
+  const stopClipRecording = () => new Promise((resolve) => {
+    const recorder = recorderRef.current;
+    if (!recorder || recorder.state === 'inactive') {
+      resolve(null);
+      return;
+    }
+    recorder.onstop = () => {
+      resolve(clipChunksRef.current.length ? new Blob(clipChunksRef.current, { type: recorder.mimeType }) : null);
+    };
+    recorder.stop();
+  });
 
   const captureFrame = () => {
     if (!videoRef.current || !canvasRef.current) return null;
@@ -84,16 +120,24 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
   const startCountdownAndCapture = async () => {
     if (isCounting) return;
     setIsCounting(true);
-    
+
+    let isRecordingClip = false;
     for (let c = COUNTDOWN_SECONDS; c > 0; c--) {
       setCountdown(c);
+      if (c === CLIP_START_AT_COUNTDOWN) {
+        startClipRecording();
+        isRecordingClip = true;
+      }
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    
+
     setCountdown(null);
     const photoData = captureFrame();
+    const clipBlob = isRecordingClip ? await stopClipRecording() : null;
+
     if (photoData) {
       setCurrentDraft(photoData);
+      setCurrentDraftClip(clipBlob);
     } else {
       alert('Gagal menangkap frame kamera. Pastikan kamera aktif dan coba lagi.');
     }
@@ -102,24 +146,29 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
 
   const handleRetake = () => {
     setCurrentDraft(null);
+    setCurrentDraftClip(null);
   };
 
   const handleNext = () => {
     // Mode Retake Individual
     if (retakeIndex !== null) {
-      onCaptureRetake(currentDraft);
+      onCaptureRetake(currentDraft, currentDraftClip);
       setCurrentDraft(null);
+      setCurrentDraftClip(null);
       return;
     }
 
     // Mode Normal berurutan
     const newPhotos = [...confirmedPhotos, currentDraft];
+    const newClips = [...confirmedClips, currentDraftClip];
     setConfirmedPhotos(newPhotos);
+    setConfirmedClips(newClips);
     setCurrentDraft(null);
-    
+    setCurrentDraftClip(null);
+
     // Jika slot sudah penuh
     if (newPhotos.length >= requiredPhotoCount) {
-      onCapture(newPhotos);
+      onCapture(newPhotos, newClips);
     }
   };
 

@@ -4,7 +4,7 @@ import { stripThemes } from '@/data/stripThemes';
 import { newspaperThemes } from '@/data/newspaperThemes';
 import { filters } from '@/utils/filters';
 
-const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, selectedFilterId, onReset }) => {
+const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoClips, selectedFilterId, onReset }) => {
   const templateRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
@@ -13,6 +13,11 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
   const [isGeneratingGif, setIsGeneratingGif] = useState(false);
   const [gifError, setGifError] = useState(null);
   const gifUrlRef = useRef(null);
+
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
+  const [videoError, setVideoError] = useState(null);
+  const videoUrlRef = useRef(null);
+  const hasCompleteVideoClips = videoClips && videoClips.length > 0 && videoClips.every(Boolean);
 
   const filterStyle = filters[selectedFilterId] || 'none';
 
@@ -45,6 +50,7 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
   useEffect(() => {
     return () => {
       if (gifUrlRef.current) URL.revokeObjectURL(gifUrlRef.current);
+      if (videoUrlRef.current) URL.revokeObjectURL(videoUrlRef.current);
     };
   }, []);
 
@@ -85,6 +91,37 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
       setGifError('Gagal membuat GIF. Silakan coba lagi.');
     } finally {
       setIsGeneratingGif(false);
+    }
+  };
+
+  const handleDownloadVideo = async () => {
+    if (isGeneratingVideo) return;
+
+    if (videoUrlRef.current) {
+      const link = document.createElement('a');
+      link.download = `warta-rupa-boomerang-${Date.now()}.webm`;
+      link.href = videoUrlRef.current;
+      link.click();
+      return;
+    }
+
+    setIsGeneratingVideo(true);
+    setVideoError(null);
+    try {
+      const { buildBoomerangVideo } = await import('@/utils/videoExport');
+      const blob = await buildBoomerangVideo(videoClips, selectedFilterId);
+      const url = URL.createObjectURL(blob);
+      videoUrlRef.current = url;
+
+      const link = document.createElement('a');
+      link.download = `warta-rupa-boomerang-${Date.now()}.webm`;
+      link.href = url;
+      link.click();
+    } catch (err) {
+      console.error('Gagal membuat video:', err);
+      setVideoError('Gagal membuat video. Silakan coba lagi.');
+    } finally {
+      setIsGeneratingVideo(false);
     }
   };
 
@@ -180,6 +217,21 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
               <p className="font-body text-sm text-accent mt-2 text-center">{gifError}</p>
             )}
           </div>
+
+          {hasCompleteVideoClips && (
+            <div className="w-full max-w-md mt-4">
+              <button
+                onClick={handleDownloadVideo}
+                disabled={isGeneratingVideo}
+                className={`w-full px-6 py-3 border-2 border-ink font-ui font-bold uppercase tracking-wider transition-colors shadow-hard-sm ${isGeneratingVideo ? 'opacity-50 cursor-not-allowed bg-white text-ink' : 'bg-white text-ink hover:bg-ink hover:text-cream'}`}
+              >
+                {isGeneratingVideo ? 'Membuat Video Boomerang... (butuh beberapa detik)' : 'Download Video Boomerang'}
+              </button>
+              {videoError && (
+                <p className="font-body text-sm text-accent mt-2 text-center">{videoError}</p>
+              )}
+            </div>
+          )}
         </>
       )}
 

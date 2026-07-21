@@ -5,6 +5,7 @@ import { filters, filterLabels } from '@/utils/filters';
 
 const StyleFilterScreen = ({
   photos,
+  videoClips,
   requiredPhotoCount,
   selectedTemplate,
   selectedThemeId,
@@ -39,6 +40,18 @@ const StyleFilterScreen = ({
   const activeTheme = availableThemes.find((t) => t.id === selectedThemeId) || availableThemes[0];
   const filterStyle = filters[selectedFilterId] || 'none';
   const otherBigIndex = bigPhotoIndex === 0 ? 1 : 0;
+
+  // Object URL untuk pratinjau klip video singkat per foto (jika ada).
+  const clipUrls = useMemo(
+    () => (videoClips || []).map((clip) => (clip ? URL.createObjectURL(clip) : null)),
+    [videoClips]
+  );
+
+  useEffect(() => {
+    return () => {
+      clipUrls.forEach((url) => url && URL.revokeObjectURL(url));
+    };
+  }, [clipUrls]);
 
   const renderTheme = (theme) => {
     if (!theme) return null;
@@ -115,12 +128,24 @@ const StyleFilterScreen = ({
           <div className="flex flex-wrap justify-center gap-4 mb-4">
             {photos.map((photo, i) => (
               <div key={i} className="flex flex-col items-center gap-2">
-                <img
-                  src={photo}
-                  alt={`Foto ${i + 1}`}
-                  className="w-20 h-20 object-cover border-2 border-ink"
-                  style={{ filter: filterStyle }}
-                />
+                {clipUrls[i] ? (
+                  <video
+                    src={clipUrls[i]}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-20 h-20 object-cover border-2 border-ink"
+                    style={{ filter: filterStyle }}
+                  />
+                ) : (
+                  <img
+                    src={photo}
+                    alt={`Foto ${i + 1}`}
+                    className="w-20 h-20 object-cover border-2 border-ink"
+                    style={{ filter: filterStyle }}
+                  />
+                )}
                 <button
                   onClick={() => onRetake(i)}
                   className="text-xs font-ui font-bold uppercase tracking-wider border border-ink px-2 py-1 hover:bg-ink hover:text-cream transition-colors"

@@ -8,6 +8,7 @@ import ResultScreen from './ResultScreen';
 export default function BoothApp() {
   const [currentScreen, setCurrentScreen] = useState('count');
   const [photos, setPhotos] = useState([]);
+  const [videoClips, setVideoClips] = useState([]);
   const [requiredPhotoCount, setRequiredPhotoCount] = useState(0);
   const [retakeIndex, setRetakeIndex] = useState(null);
 
@@ -19,6 +20,7 @@ export default function BoothApp() {
   const handleSelectCount = (count) => {
     setRequiredPhotoCount(count);
     setPhotos([]);
+    setVideoClips([]);
     setSelectedTemplate(null);
     setSelectedThemeId(null);
     setSelectedFilterId('normal');
@@ -26,15 +28,21 @@ export default function BoothApp() {
     setCurrentScreen('camera');
   };
 
-  const handleCapture = (capturedPhotos) => {
+  const handleCapture = (capturedPhotos, capturedClips) => {
     setPhotos(capturedPhotos);
+    setVideoClips(capturedClips);
     setCurrentScreen('style');
   };
 
-  const handleCaptureRetake = (newPhoto) => {
+  const handleCaptureRetake = (newPhoto, newClip) => {
     const updatedPhotos = [...photos];
     updatedPhotos[retakeIndex] = newPhoto;
     setPhotos(updatedPhotos);
+
+    const updatedClips = [...videoClips];
+    updatedClips[retakeIndex] = newClip;
+    setVideoClips(updatedClips);
+
     setRetakeIndex(null);
     setCurrentScreen('style');
   };
@@ -55,6 +63,7 @@ export default function BoothApp() {
 
   const handleReset = () => {
     setPhotos([]);
+    setVideoClips([]);
     setRequiredPhotoCount(0);
     setRetakeIndex(null);
     setSelectedTemplate(null);
@@ -86,6 +95,7 @@ export default function BoothApp() {
       {currentScreen === 'style' && (
         <StyleFilterScreen
           photos={photos}
+          videoClips={videoClips}
           requiredPhotoCount={requiredPhotoCount}
           selectedTemplate={selectedTemplate}
           selectedThemeId={selectedThemeId}
@@ -105,6 +115,7 @@ export default function BoothApp() {
           stripThemeId={selectedTemplate === 'photostrip' ? selectedThemeId : null}
           newspaperThemeId={selectedTemplate === 'newspaper' ? selectedThemeId : null}
           photos={orderedPhotosForResult}
+          videoClips={videoClips}
           selectedFilterId={selectedFilterId}
           onReset={handleReset}
         />
