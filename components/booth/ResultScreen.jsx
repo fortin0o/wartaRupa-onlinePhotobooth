@@ -10,10 +10,6 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   const [isGenerating, setIsGenerating] = useState(true);
   const [exportError, setExportError] = useState(null);
 
-  const [videoUrl, setVideoUrl] = useState(null);
-  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
-  const [videoError, setVideoError] = useState(null);
-
   const [gifUrl, setGifUrl] = useState(null);
   const [isGeneratingGif, setIsGeneratingGif] = useState(false);
   const [gifError, setGifError] = useState(null);
@@ -44,25 +40,6 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     }
   }, [template, photos, selectedFilterId]);
 
-  const generateVideo = useCallback(async () => {
-    if (!hasCompleteVideoClips) return;
-    setIsGeneratingVideo(true);
-    setVideoError(null);
-    try {
-      const { buildBoomerangVideo } = await import('@/utils/videoExport');
-      const blob = await buildBoomerangVideo(videoClips, selectedFilterId);
-      setVideoUrl((prevUrl) => {
-        if (prevUrl) URL.revokeObjectURL(prevUrl);
-        return URL.createObjectURL(blob);
-      });
-    } catch (err) {
-      console.error('Gagal membuat video:', err);
-      setVideoError('Gagal membuat video. Silakan coba lagi.');
-    } finally {
-      setIsGeneratingVideo(false);
-    }
-  }, [videoClips, selectedFilterId, hasCompleteVideoClips]);
-
   const generateGif = useCallback(async () => {
     if (!hasCompleteVideoClips) return;
     setIsGeneratingGif(true);
@@ -86,22 +63,17 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     generateImage();
   }, [generateImage]);
 
-  // Video & GIF boomerang dibuat otomatis di latar belakang begitu layar hasil
-  // tampil, supaya sudah siap dipratonton saat pengguna melihat ke panelnya.
-  useEffect(() => {
-    generateVideo();
-  }, [generateVideo]);
-
+  // GIF boomerang dibuat otomatis di latar belakang begitu layar hasil tampil,
+  // supaya sudah siap dipratonton saat pengguna melihat ke panelnya.
   useEffect(() => {
     generateGif();
   }, [generateGif]);
 
   useEffect(() => {
     return () => {
-      if (videoUrl) URL.revokeObjectURL(videoUrl);
       if (gifUrl) URL.revokeObjectURL(gifUrl);
     };
-  }, [videoUrl, gifUrl]);
+  }, [gifUrl]);
 
   const handleDownload = () => {
     if (!imageUrl) return;
@@ -109,14 +81,6 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     const timestamp = new Date().getTime();
     link.download = `warta-rupa-${timestamp}.png`;
     link.href = imageUrl;
-    link.click();
-  };
-
-  const handleDownloadVideo = () => {
-    if (!videoUrl) return;
-    const link = document.createElement('a');
-    link.download = `warta-rupa-boomerang-${Date.now()}.webm`;
-    link.href = videoUrl;
     link.click();
   };
 
@@ -166,7 +130,7 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
         </p>
       </div>
 
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-8">
+      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8">
         {/* Panel Gambar (PNG) */}
         <div className="flex flex-col items-center">
           {isGenerating ? (
@@ -205,62 +169,12 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
           )}
         </div>
 
-        {/* Panel Video Boomerang */}
-        <div className="flex flex-col items-center">
-          {!hasCompleteVideoClips ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px] text-center">
-              <p className="font-body text-gray-500">
-                Video boomerang tidak tersedia untuk sesi ini (kamera/browser tidak mendukung perekaman video).
-              </p>
-            </div>
-          ) : isGeneratingVideo ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px]">
-              <div className="w-12 h-12 border-4 border-gray-300 border-t-ink rounded-full animate-spin mb-4"></div>
-              <p className="font-body text-lg animate-pulse">Membuat video boomerang...</p>
-            </div>
-          ) : videoError ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-accent shadow-hard w-full min-h-[300px] text-center">
-              <div className="text-4xl mb-4">⚠️</div>
-              <p className="font-display font-bold text-xl mb-2">Oops, Gagal!</p>
-              <p className="font-body text-gray-600 mb-6">{videoError}</p>
-              <button
-                onClick={generateVideo}
-                className="px-6 py-2 bg-ink text-cream font-ui font-bold uppercase tracking-wider hover:bg-accent transition-colors"
-              >
-                Coba Lagi
-              </button>
-            </div>
-          ) : videoUrl ? (
-            <>
-              <div className="p-3 bg-white border-2 border-ink shadow-hard mb-6 w-full flex justify-center">
-                <video
-                  src={videoUrl}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  disablePictureInPicture
-                  controlsList="nodownload nofullscreen noremoteplayback"
-                  onContextMenu={(e) => e.preventDefault()}
-                  className="max-h-[60vh] w-auto object-contain mx-auto pointer-events-none"
-                />
-              </div>
-              <button
-                onClick={handleDownloadVideo}
-                className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
-              >
-                Download Video (WebM)
-              </button>
-            </>
-          ) : null}
-        </div>
-
         {/* Panel GIF Boomerang */}
         <div className="flex flex-col items-center">
           {!hasCompleteVideoClips ? (
             <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px] text-center">
               <p className="font-body text-gray-500">
-                GIF boomerang tidak tersedia untuk sesi ini.
+                GIF boomerang tidak tersedia untuk sesi ini (kamera/browser tidak mendukung perekaman video).
               </p>
             </div>
           ) : isGeneratingGif ? (
@@ -293,7 +207,7 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
                 onClick={handleDownloadGif}
                 className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
               >
-                Download GIF (buka di HP)
+                Download GIF
               </button>
             </>
           ) : null}
