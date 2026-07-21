@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Archivo:wght@400;500;600;700;900&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Archivo:wght@400;500;600;700;900&family=Fredoka:wght@500;600;700&family=Caveat:wght@600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -10,6 +10,8 @@
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body:    'EB Garamond', Georgia, serif;
   --font-ui:      'Archivo', system-ui, sans-serif;
+  --font-round:   'Fredoka', system-ui, sans-serif;
+  --font-script:  'Caveat', cursive;
 }
 
 @theme inline {
@@ -32,6 +34,8 @@ body {
 .font-display { font-family: var(--font-display); }
 .font-body    { font-family: var(--font-body); }
 .font-ui      { font-family: var(--font-ui); }
+.font-round   { font-family: var(--font-round); }
+.font-script  { font-family: var(--font-script); }
 
 .rule-double {
   border: none;

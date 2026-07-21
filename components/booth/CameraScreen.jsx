@@ -1,7 +1,7 @@
-﻿import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { getSupportedRecordingMimeType } from '../../utils/videoExport';
 
-// â”€â”€â”€ Named Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Named Constants ──────────────────────────────────────────────────────────
 const COUNTDOWN_SECONDS = 3;
 const JPEG_QUALITY = 0.9;
 const CLIP_START_AT_COUNTDOWN = 2; // mulai rekam saat hitung mundur menyentuh angka ini (~2 detik sebelum jepret)
@@ -23,11 +23,11 @@ const getCameraErrorMessage = (err) => {
 const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, onCaptureRetake, onBack }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  
+
   const [hasPermission, setHasPermission] = useState(true);
   const [cameraError, setCameraError] = useState(null);
   const [isRequestingPermission, setIsRequestingPermission] = useState(true);
-  
+
   // State alur pengambilan foto berurutan
   const [confirmedPhotos, setConfirmedPhotos] = useState([]);
   const [confirmedClips, setConfirmedClips] = useState([]);
@@ -43,9 +43,9 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
     setCameraError(null);
     setIsRequestingPermission(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'user' }, 
-        audio: false 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: false
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -101,19 +101,19 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
 
   const captureFrame = () => {
     if (!videoRef.current || !canvasRef.current) return null;
-    
+
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    
+
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
-    
+
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    
+
     return canvas.toDataURL('image/jpeg', JPEG_QUALITY);
   };
 
@@ -180,7 +180,7 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
       <canvas ref={canvasRef} className="hidden" />
 
       {/* Header & Indikator */}
-      <div className="w-full max-w-[480px] flex justify-between items-center mb-6">
+      <div className="w-full max-w-[640px] flex justify-between items-center mb-6">
         <button
           onClick={onBack}
           disabled={isCounting}
@@ -193,86 +193,109 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
         </div>
       </div>
 
-      {/* Box Kamera Container */}
-      <div className="w-full max-w-[480px] bg-cream border-4 border-ink p-4 shadow-hard">
-
-        {/* Aspect Ratio Wrapper (4:3) */}
-        <div className="relative w-full aspect-[4/3] bg-gray-900 border-2 border-gray-300 overflow-hidden flex items-center justify-center">
-          
-          {/* Video selalu ada di DOM agar videoRef.current valid saat initCamera() meng-assign srcObject */}
-          <video 
-            ref={videoRef}
-            autoPlay 
-            playsInline 
-            muted
-            disablePictureInPicture
-            controlsList="nodownload nofullscreen noremoteplayback"
-            className={`absolute inset-0 w-full h-full object-cover -scale-x-100 ${currentDraft || !hasPermission ? 'opacity-0' : 'opacity-100'}`}
-          />
-
-          {/* Overlay: foto draft setelah capture */}
-          {currentDraft && (
-            <img 
-              src={currentDraft} 
-              alt="Draft Foto" 
-              className="absolute inset-0 w-full h-full object-cover z-10" 
-            />
-          )}
-
-          {/* Overlay: spinner saat meminta izin */}
-          {isRequestingPermission && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20">
-              <div className="w-10 h-10 border-4 border-gray-500 border-t-white rounded-full animate-spin mb-4" />
-              <p className="font-body text-gray-300">Menghubungkan kamera...</p>
-            </div>
-          )}
-
-          {/* Overlay: error state jika izin ditolak / kamera tidak ditemukan */}
-          {!isRequestingPermission && !hasPermission && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20 p-6 text-center">
-              <h3 className="text-xl font-display mb-2 text-white">Kamera Tidak Tersedia</h3>
-              <p className="font-body text-gray-400 mb-6">{cameraError}</p>
-              <button
-                onClick={initCamera}
-                className="px-6 py-2 bg-cream text-ink font-ui font-bold uppercase tracking-wider hover:bg-white transition"
-              >
-                Coba Lagi
-              </button>
-            </div>
-          )}
-
-          {/* Overlay: countdown */}
-          {countdown !== null && (
-            <div className="absolute inset-0 flex items-center justify-center z-30">
-              <div className="text-8xl font-display font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
-                {countdown}
-              </div>
-            </div>
-          )}
+      {/* Badan Kamera - Gaya Kamera Kotak Vintage (TLR) */}
+      <div
+        className="w-full max-w-[640px] bg-ink border-4 border-ink shadow-hard p-5 sm:p-7 relative"
+        style={{
+          backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 7px)',
+        }}
+      >
+        {/* Pelat Atas: lencana merek + tuas pemutar film dekoratif */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-300 to-gray-500 border border-black/50 shadow-inner" />
+            <span className="font-display font-black text-cream text-sm sm:text-base uppercase tracking-[0.3em]">
+              Warta Rupa
+            </span>
+          </div>
+          <div className="w-10 h-3 bg-gradient-to-r from-gray-400 to-gray-600 rounded-sm -rotate-[8deg] shadow-sm" />
         </div>
 
+        {/* Rumah Lensa / Bingkai Viewfinder */}
+        <div className="relative p-2 sm:p-3 bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 border-2 border-black/50 rounded-md">
+          {/* Baut sudut dekoratif */}
+          <div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 rounded-full bg-black/40" />
+          <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-black/40" />
+          <div className="absolute bottom-1.5 left-1.5 w-1.5 h-1.5 rounded-full bg-black/40" />
+          <div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-black/40" />
 
-        {/* Kontrol Bawah Box */}
+          {/* Aspect Ratio Wrapper (4:3) */}
+          <div className="relative w-full aspect-[4/3] bg-gray-900 border-2 border-black overflow-hidden flex items-center justify-center rounded-sm">
+
+            {/* Video selalu ada di DOM agar videoRef.current valid saat initCamera() meng-assign srcObject */}
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              disablePictureInPicture
+              controlsList="nodownload nofullscreen noremoteplayback"
+              className={`absolute inset-0 w-full h-full object-cover -scale-x-100 ${currentDraft || !hasPermission ? 'opacity-0' : 'opacity-100'}`}
+            />
+
+            {/* Overlay: foto draft setelah capture */}
+            {currentDraft && (
+              <img
+                src={currentDraft}
+                alt="Draft Foto"
+                className="absolute inset-0 w-full h-full object-cover z-10"
+              />
+            )}
+
+            {/* Overlay: spinner saat meminta izin */}
+            {isRequestingPermission && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20">
+                <div className="w-10 h-10 border-4 border-gray-500 border-t-white rounded-full animate-spin mb-4" />
+                <p className="font-body text-gray-300">Menghubungkan kamera...</p>
+              </div>
+            )}
+
+            {/* Overlay: error state jika izin ditolak / kamera tidak ditemukan */}
+            {!isRequestingPermission && !hasPermission && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20 p-6 text-center">
+                <h3 className="text-xl font-display mb-2 text-white">Kamera Tidak Tersedia</h3>
+                <p className="font-body text-gray-400 mb-6">{cameraError}</p>
+                <button
+                  onClick={initCamera}
+                  className="px-6 py-2 bg-cream text-ink font-ui font-bold uppercase tracking-wider hover:bg-white transition"
+                >
+                  Coba Lagi
+                </button>
+              </div>
+            )}
+
+            {/* Overlay: countdown */}
+            {countdown !== null && (
+              <div className="absolute inset-0 flex items-center justify-center z-30">
+                <div className="text-8xl font-display font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
+                  {countdown}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Panel Kontrol Bawah */}
         {hasPermission && !isRequestingPermission && (
-          <div className="mt-6 flex justify-center items-center h-16">
+          <div className="mt-5 flex justify-center items-center h-20">
             {!currentDraft ? (
               <button
                 onClick={startCountdownAndCapture}
                 disabled={isCounting}
-                className={`w-16 h-16 bg-accent rounded-full border-4 border-ink shadow-hard-sm hover:translate-y-1 hover:shadow-none transition-all ${isCounting ? 'opacity-50 cursor-not-allowed transform-none shadow-none' : ''}`}
+                className={`w-20 h-20 bg-accent rounded-full border-[6px] border-gray-300 shadow-hard-sm hover:translate-y-1 hover:shadow-none transition-all ${isCounting ? 'opacity-50 cursor-not-allowed transform-none shadow-none' : ''}`}
                 title="Ambil Foto"
               ></button>
             ) : (
               <div className="flex gap-4 w-full">
                 <button
                   onClick={handleRetake}
-                  className="flex-1 py-3 border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-white transition-colors"
+                  className="flex-1 py-3 border-2 border-cream text-cream font-ui font-bold uppercase tracking-wider hover:bg-cream hover:text-ink transition-colors"
                 >
                   Retake
                 </button>
                 <button
                   onClick={handleNext}
-                  className="flex-1 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
+                  className="flex-1 py-3 bg-accent text-cream border-2 border-accent font-ui font-bold uppercase tracking-wider hover:bg-cream hover:text-ink hover:border-cream transition-colors shadow-hard-sm"
                 >
                   {isRetakeMode ? 'Simpan' : (currentPhotoNumber >= requiredPhotoCount ? 'Selesai' : 'Lanjut')}
                 </button>
@@ -280,11 +303,9 @@ const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, o
             )}
           </div>
         )}
-
       </div>
     </div>
   );
 };
 
 export default CameraScreen;
-
