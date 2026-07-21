@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "gifenc": "^1.0.3",
     "html-to-image": "^1.11.13",
     "next": "15.1.4",
     "react": "19.0.0",
