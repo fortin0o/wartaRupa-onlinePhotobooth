@@ -1,37 +1,34 @@
-﻿'use client';
+'use client';
 import { useState } from 'react';
-import HomeScreen from './HomeScreen';
+import CountPickerScreen from './CountPickerScreen';
 import CameraScreen from './CameraScreen';
-import ReviewScreen from './ReviewScreen';
+import StyleFilterScreen from './StyleFilterScreen';
 import ResultScreen from './ResultScreen';
 
 export default function BoothApp() {
-  const [currentScreen, setCurrentScreen] = useState('home');
+  const [currentScreen, setCurrentScreen] = useState('count');
   const [photos, setPhotos] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [requiredPhotoCount, setRequiredPhotoCount] = useState(0);
   const [retakeIndex, setRetakeIndex] = useState(null);
-  const [selectedFilterId, setSelectedFilterId] = useState('normal');
-  const [selectedStripTheme, setSelectedStripTheme] = useState(null);
-  const [selectedNewspaperTheme, setSelectedNewspaperTheme] = useState(null);
 
-  const handleSelectTemplate = (template, count, themeId = null) => {
-    setSelectedTemplate(template);
+  const [selectedTemplate, setSelectedTemplate] = useState(null); // 'newspaper' | 'photostrip'
+  const [selectedThemeId, setSelectedThemeId] = useState(null);
+  const [selectedFilterId, setSelectedFilterId] = useState('normal');
+  const [bigPhotoIndex, setBigPhotoIndex] = useState(0);
+
+  const handleSelectCount = (count) => {
     setRequiredPhotoCount(count);
-    if (template === 'photostrip') {
-      setSelectedStripTheme(themeId);
-      setSelectedNewspaperTheme(null);
-    } else if (template === 'newspaper') {
-      setSelectedNewspaperTheme(themeId);
-      setSelectedStripTheme(null);
-    }
     setPhotos([]);
+    setSelectedTemplate(null);
+    setSelectedThemeId(null);
+    setSelectedFilterId('normal');
+    setBigPhotoIndex(0);
     setCurrentScreen('camera');
   };
 
   const handleCapture = (capturedPhotos) => {
     setPhotos(capturedPhotos);
-    setCurrentScreen('review');
+    setCurrentScreen('style');
   };
 
   const handleCaptureRetake = (newPhoto) => {
@@ -39,7 +36,7 @@ export default function BoothApp() {
     updatedPhotos[retakeIndex] = newPhoto;
     setPhotos(updatedPhotos);
     setRetakeIndex(null);
-    setCurrentScreen('review');
+    setCurrentScreen('style');
   };
 
   const handleRetakeRequest = (index) => {
@@ -47,31 +44,38 @@ export default function BoothApp() {
     setCurrentScreen('camera');
   };
 
-  const handleFinalizeReview = (finalPhotos, filterId) => {
-    setPhotos(finalPhotos);
-    setSelectedFilterId(filterId);
+  const handleSelectTheme = (template, themeId) => {
+    setSelectedTemplate(template);
+    setSelectedThemeId(themeId);
+  };
+
+  const handleFinalizeStyle = () => {
     setCurrentScreen('result');
   };
 
   const handleReset = () => {
     setPhotos([]);
-    setSelectedTemplate(null);
     setRequiredPhotoCount(0);
     setRetakeIndex(null);
+    setSelectedTemplate(null);
+    setSelectedThemeId(null);
     setSelectedFilterId('normal');
-    setSelectedStripTheme(null);
-    setSelectedNewspaperTheme(null);
-    setCurrentScreen('home');
+    setBigPhotoIndex(0);
+    setCurrentScreen('count');
   };
+
+  const otherIndex = bigPhotoIndex === 0 ? 1 : 0;
+  const orderedPhotosForResult = selectedTemplate === 'newspaper'
+    ? [photos[bigPhotoIndex], photos[otherIndex]]
+    : photos;
 
   return (
     <div className='min-h-screen bg-cream grain'>
-      {currentScreen === 'home' && (
-        <HomeScreen onSelectTemplate={handleSelectTemplate} />
+      {currentScreen === 'count' && (
+        <CountPickerScreen onSelectCount={handleSelectCount} />
       )}
       {currentScreen === 'camera' && (
         <CameraScreen
-          template={selectedTemplate}
           requiredPhotoCount={requiredPhotoCount}
           retakeIndex={retakeIndex}
           onCapture={handleCapture}
@@ -79,20 +83,28 @@ export default function BoothApp() {
           onBack={handleReset}
         />
       )}
-      {currentScreen === 'review' && (
-        <ReviewScreen
+      {currentScreen === 'style' && (
+        <StyleFilterScreen
           photos={photos}
+          requiredPhotoCount={requiredPhotoCount}
           selectedTemplate={selectedTemplate}
+          selectedThemeId={selectedThemeId}
+          selectedFilterId={selectedFilterId}
+          bigPhotoIndex={bigPhotoIndex}
+          onSelectTheme={handleSelectTheme}
+          onSelectFilter={setSelectedFilterId}
+          onSelectBigPhoto={setBigPhotoIndex}
           onRetake={handleRetakeRequest}
-          onNext={handleFinalizeReview}
+          onNext={handleFinalizeStyle}
+          onBack={handleReset}
         />
       )}
       {currentScreen === 'result' && (
         <ResultScreen
           template={selectedTemplate}
-          stripThemeId={selectedStripTheme}
-          newspaperThemeId={selectedNewspaperTheme}
-          photos={photos}
+          stripThemeId={selectedTemplate === 'photostrip' ? selectedThemeId : null}
+          newspaperThemeId={selectedTemplate === 'newspaper' ? selectedThemeId : null}
+          photos={orderedPhotosForResult}
           selectedFilterId={selectedFilterId}
           onReset={handleReset}
         />
@@ -100,4 +112,3 @@ export default function BoothApp() {
     </div>
   );
 }
-
