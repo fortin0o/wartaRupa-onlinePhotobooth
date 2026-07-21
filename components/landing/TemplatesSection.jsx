@@ -10,7 +10,7 @@ export default function TemplatesSection() {
   ];
 
   return (
-    <section id="templates" className="px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
+    <section id="templates" className="bg-cream px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
       <div className="text-center mb-12">
         <h2 className="font-display font-black text-4xl md:text-5xl uppercase mb-4">
           Katalog Cetakan

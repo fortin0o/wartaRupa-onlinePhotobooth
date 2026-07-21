@@ -6,7 +6,7 @@
   ];
 
   return (
-    <section id="features" className="px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
+    <section id="features" className="bg-cream px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Left Column */}
         <div className="lg:col-span-5">

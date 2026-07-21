@@ -7,7 +7,7 @@
   ];
 
   return (
-    <section id="how-it-works" className="px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
+    <section id="how-it-works" className="bg-paper px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
       <div className="border-2 border-ink p-1">
         <div className="border border-ink p-8 bg-paper">
           <div className="text-center mb-12">

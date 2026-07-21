@@ -5,7 +5,7 @@ export default function ShowcaseSection() {
   const SampleComponent = sample.component;
 
   return (
-    <section className="px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
+    <section className="bg-paper px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-5 order-2 lg:order-1">
           <h2 className="font-display font-black text-4xl md:text-5xl uppercase mb-6 leading-tight">

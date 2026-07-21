@@ -24,7 +24,7 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" className="px-6 py-20 max-w-4xl mx-auto border-b-4 border-ink">
+    <section id="faq" className="bg-paper px-6 py-20 max-w-7xl mx-auto border-b-4 border-ink">
       <div className="text-center mb-12">
         <h2 className="font-display font-black text-4xl md:text-5xl uppercase mb-4">
           Tanya Jawab
@@ -35,7 +35,7 @@ export default function FAQSection() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 max-w-3xl mx-auto">
         {FAQS.map((item, i) => {
           const isOpen = openIndex === i;
           return (

@@ -4,7 +4,7 @@ export default function HeroSection() {
   const date = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <section className="px-6 pt-12 pb-16 max-w-7xl mx-auto border-b-4 border-ink">
+    <section className="bg-cream px-6 pt-12 pb-16 max-w-7xl mx-auto border-b-4 border-ink">
       {/* Masthead */}
       <div className="text-center mb-8 border-b-2 border-ink pb-6">
         <div className="flex justify-between items-end border-b border-ink pb-2 mb-4 font-ui text-xs md:text-sm uppercase tracking-widest">

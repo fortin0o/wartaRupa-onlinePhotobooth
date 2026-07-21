@@ -30,7 +30,7 @@
   ];
 
   return (
-    <section id="pricing" className="px-6 py-20 max-w-7xl mx-auto border-b-8 border-ink">
+    <section id="pricing" className="bg-cream px-6 py-20 max-w-7xl mx-auto">
       <div className="text-center mb-16">
         <h2 className="font-display font-black text-4xl md:text-5xl uppercase mb-4">
           Biaya Berlangganan
