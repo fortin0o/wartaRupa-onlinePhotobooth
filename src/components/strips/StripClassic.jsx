@@ -1,15 +1,10 @@
 import React from 'react';
+import { getFormattedDate, PLACEHOLDER_STRIP } from '../../utils/templateUtils';
 
 const StripClassic = ({ photos = [], filterStyle = "none" }) => {
-  const today = new Date().toLocaleDateString('id-ID', {
-    day: '2-digit', month: '2-digit', year: '2-digit'
-  });
+  const today = getFormattedDate('id-ID', { day: '2-digit', month: '2-digit', year: '2-digit' });
   
-  const placeholders = [
-    'https://via.placeholder.com/400x300?text=Foto+1',
-    'https://via.placeholder.com/400x300?text=Foto+2',
-    'https://via.placeholder.com/400x300?text=Foto+3'
-  ];
+  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
 
   return (
     <div className="bg-[#fafafa] border border-gray-300 p-3 w-[200px] mx-auto flex flex-col font-sans box-border shadow-none">

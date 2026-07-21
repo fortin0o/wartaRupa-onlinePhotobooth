@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { toPng } from 'html-to-image';
 import { stripThemes } from '../data/stripThemes';
 import { newspaperThemes } from '../data/newspaperThemes';
@@ -8,32 +8,35 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
   const templateRef = useRef(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
+  const [exportError, setExportError] = useState(null);
 
   const filterStyle = filters[selectedFilterId] || 'none';
 
-  useEffect(() => {
-    const generateImage = async () => {
-      if (!templateRef.current) return;
-      
-      try {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const dataUrl = await toPng(templateRef.current, { 
-          cacheBust: true,
-          pixelRatio: 2,
-          backgroundColor: '#ffffff'
-        });
-        
-        setImageUrl(dataUrl);
-      } catch (err) {
-        console.error('Gagal memproses gambar:', err);
-      } finally {
-        setIsGenerating(false);
-      }
-    };
+  const generateImage = useCallback(async () => {
+    if (!templateRef.current) return;
+    setIsGenerating(true);
+    setExportError(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-    generateImage();
+      const dataUrl = await toPng(templateRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff'
+      });
+
+      setImageUrl(dataUrl);
+    } catch (err) {
+      console.error('Gagal memproses gambar:', err);
+      setExportError('Gagal membuat gambar. Silakan coba lagi.');
+    } finally {
+      setIsGenerating(false);
+    }
   }, [template, photos, selectedFilterId]);
+
+  useEffect(() => {
+    generateImage();
+  }, [generateImage]);
 
   const handleDownload = () => {
     if (!imageUrl) return;
@@ -86,6 +89,18 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
         <div className="flex flex-col items-center justify-center p-12 bg-white rounded shadow-lg mb-8 min-w-[300px]">
           <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
           <p className="font-garamond text-lg animate-pulse">Menyiapkan hasil...</p>
+        </div>
+      ) : exportError ? (
+        <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-red-300 rounded shadow-lg mb-8 min-w-[300px] text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <p className="font-playfair font-bold text-xl mb-2">Oops, Gagal!</p>
+          <p className="font-garamond text-gray-600 mb-6">{exportError}</p>
+          <button
+            onClick={generateImage}
+            className="px-6 py-2 bg-black text-white font-garamond font-bold hover:bg-gray-800 transition-colors"
+          >
+            Coba Lagi
+          </button>
         </div>
       ) : (
         <>

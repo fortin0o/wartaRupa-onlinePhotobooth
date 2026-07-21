@@ -1,21 +1,18 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
+import { getFormattedDate, buildCompositeFilter, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../utils/templateUtils';
 
 const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
   const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 7).join(' '), []);
   const article  = useMemo(() => getRandomArticle(), []);
   
-  const today = new Date().toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
+  const today = getFormattedDate();
 
-  const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
-  const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
+  const mainPhotoSrc  = bigPhoto   || PLACEHOLDER_BIG;
+  const smallPhotoSrc = smallPhoto || PLACEHOLDER_SMALL;
 
   // Gabungkan grayscale dengan filter user
-  const bwFilter = filterStyle && filterStyle !== 'none' 
-    ? `grayscale(1) contrast(1.1) ${filterStyle}` 
-    : 'grayscale(1) contrast(1.1)';
+  const bwFilter = buildCompositeFilter('grayscale(1) contrast(1.1)', filterStyle);
 
   return (
     <div

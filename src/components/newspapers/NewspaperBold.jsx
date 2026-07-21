@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
+import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../utils/templateUtils';
 
 // Rotasi acak tapi konsisten per render
 const ROTATE_OPTIONS = [-2, -1.5, -1, 0.5, 1, 1.5, 2];
@@ -12,12 +13,10 @@ const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
     []
   );
 
-  const today = new Date().toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
+  const today = getFormattedDate();
 
-  const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
-  const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
+  const mainPhotoSrc  = bigPhoto   || PLACEHOLDER_BIG;
+  const smallPhotoSrc = smallPhoto || PLACEHOLDER_SMALL;
 
   return (
     <div

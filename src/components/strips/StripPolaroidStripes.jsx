@@ -1,11 +1,8 @@
 import React from 'react';
+import { PLACEHOLDER_STRIP } from '../../utils/templateUtils';
 
 const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
-  const placeholders = [
-    'https://via.placeholder.com/400x300?text=1',
-    'https://via.placeholder.com/400x300?text=2',
-    'https://via.placeholder.com/400x300?text=3'
-  ];
+  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
 
   // Pola checkerboard biru navy dan putih
   const checkerboardBg = {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { PLACEHOLDER_STRIP } from '../../utils/templateUtils';
 
 // Blob border-radius yang berbeda untuk tiap foto
 const blobShapes = [
@@ -44,11 +45,7 @@ const SmileyFace = ({ cx, cy, r, color, style }) => (
 );
 
 const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
-  const placeholders = [
-    'https://via.placeholder.com/400x400?text=1',
-    'https://via.placeholder.com/400x400?text=2',
-    'https://via.placeholder.com/400x400?text=3'
-  ];
+  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
 
   return (
     <div

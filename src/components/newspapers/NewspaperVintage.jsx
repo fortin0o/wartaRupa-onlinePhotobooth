@@ -1,16 +1,18 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
+import { getFormattedDate, buildCompositeFilter, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../utils/templateUtils';
 
 const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
   const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 5).join(' '), []); // keep it short for this layout
   const article  = useMemo(() => getRandomArticle(), []);
-  
-  const today = new Date().toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  }).toUpperCase();
 
-  const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
-  const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
+  // Gabungkan grayscale vintage dengan filter pilihan user (pola sama dengan NewspaperClassicBW)
+  const vintageFilter = buildCompositeFilter('grayscale(1) contrast(1.1)', filterStyle);
+  
+  const today = getFormattedDate('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+
+  const mainPhotoSrc  = bigPhoto   || PLACEHOLDER_BIG;
+  const smallPhotoSrc = smallPhoto || PLACEHOLDER_SMALL;
 
   return (
     <div 
@@ -77,7 +79,7 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
               src={smallPhotoSrc} 
               alt="Foto Kecil" 
               className="w-full h-[80px] object-cover mb-2" 
-              style={{ filter: filterStyle, filter: 'grayscale(1) contrast(1.1)' }}
+              style={{ filter: vintageFilter }}
             />
             <span className="font-playfair font-bold text-[9px] uppercase text-center leading-tight">
               "Candid moments captured in perfect unity."
@@ -92,7 +94,7 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
               src={mainPhotoSrc} 
               alt="Foto Utama" 
               className="w-full aspect-[4/3] object-cover" 
-              style={{ filter: filterStyle }}
+              style={{ filter: vintageFilter }}
             />
           </div>
           <p className="font-garamond text-[10px] text-justify leading-snug mb-2">

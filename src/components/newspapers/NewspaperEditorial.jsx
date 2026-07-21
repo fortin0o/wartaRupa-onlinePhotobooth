@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
+import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../utils/templateUtils';
 
 const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
   const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 8).join(' '), []);
   const article  = useMemo(() => getRandomArticle(), []);
 
-  const today = new Date().toLocaleDateString('id-ID', {
-    day: '2-digit', month: '2-digit', year: 'numeric'
-  });
+  const today = getFormattedDate('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-  const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
-  const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
+  const mainPhotoSrc  = bigPhoto   || PLACEHOLDER_BIG;
+  const smallPhotoSrc = smallPhoto || PLACEHOLDER_SMALL;
 
   return (
     <div

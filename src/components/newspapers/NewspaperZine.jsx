@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../data/newspaperContent';
+import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../utils/templateUtils';
 
 const CHAR_FONTS = ['"Playfair Display", serif', '"Courier New", monospace', '"EB Garamond", serif', '"Georgia", serif'];
 const CHAR_SIZES   = ['1.1rem', '1.3rem', '0.95rem', '1.25rem', '1rem'];
@@ -17,12 +18,10 @@ const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
   const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 5).join(' '), []);
   const article  = useMemo(() => getRandomArticle(), []);
 
-  const today = new Date().toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
+  const today = getFormattedDate();
 
-  const mainPhotoSrc  = bigPhoto   || 'https://via.placeholder.com/400x300?text=Foto+Besar';
-  const smallPhotoSrc = smallPhoto || 'https://via.placeholder.com/150?text=Foto+Kecil';
+  const mainPhotoSrc  = bigPhoto   || PLACEHOLDER_BIG;
+  const smallPhotoSrc = smallPhoto || PLACEHOLDER_SMALL;
 
   const charStyles = useMemo(() =>
     headline.split('').map((char, i) => ({

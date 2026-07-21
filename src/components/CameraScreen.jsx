@@ -1,11 +1,30 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 
+// ─── Named Constants ──────────────────────────────────────────────────────────
+const COUNTDOWN_SECONDS = 3;
+const JPEG_QUALITY = 0.9;
+
+/** Kembalikan pesan error yang spesifik per tipe DOMException kamera. */
+const getCameraErrorMessage = (err) => {
+  if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+    return 'Izin kamera ditolak. Buka pengaturan browser dan izinkan akses kamera, lalu muat ulang halaman.';
+  }
+  if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+    return 'Tidak ada kamera yang ditemukan. Pastikan perangkat Anda memiliki kamera yang terhubung.';
+  }
+  if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+    return 'Kamera sedang digunakan oleh aplikasi lain. Tutup aplikasi tersebut dan coba lagi.';
+  }
+  return 'Gagal mengakses kamera. Pastikan tidak ada aplikasi lain yang menggunakannya.';
+};
+
 const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeIndex = null, onCapture, onCaptureRetake, onBack }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   
   const [hasPermission, setHasPermission] = useState(true);
   const [cameraError, setCameraError] = useState(null);
+  const [isRequestingPermission, setIsRequestingPermission] = useState(true);
   
   // State alur pengambilan foto berurutan
   const [confirmedPhotos, setConfirmedPhotos] = useState([]);
@@ -15,6 +34,7 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
 
   const initCamera = useCallback(async () => {
     setCameraError(null);
+    setIsRequestingPermission(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { facingMode: 'user' }, 
@@ -27,7 +47,9 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
     } catch (err) {
       console.error("Camera error:", err);
       setHasPermission(false);
-      setCameraError('Gagal mengakses kamera. Pastikan Anda memberikan izin akses kamera.');
+      setCameraError(getCameraErrorMessage(err));
+    } finally {
+      setIsRequestingPermission(false);
     }
   }, []);
 
@@ -56,14 +78,14 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     
-    return canvas.toDataURL('image/jpeg', 0.9);
+    return canvas.toDataURL('image/jpeg', JPEG_QUALITY);
   };
 
   const startCountdownAndCapture = async () => {
     if (isCounting) return;
     setIsCounting(true);
     
-    for (let c = 3; c > 0; c--) {
+    for (let c = COUNTDOWN_SECONDS; c > 0; c--) {
       setCountdown(c);
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
@@ -72,6 +94,8 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
     const photoData = captureFrame();
     if (photoData) {
       setCurrentDraft(photoData);
+    } else {
+      alert('Gagal menangkap frame kamera. Pastikan kamera aktif dan coba lagi.');
     }
     setIsCounting(false);
   };
@@ -126,9 +150,14 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
         {/* Aspect Ratio Wrapper (4:3) */}
         <div className="relative w-full aspect-[4/3] bg-gray-900 border-2 border-gray-300 overflow-hidden flex items-center justify-center">
           
-          {!hasPermission ? (
+          {isRequestingPermission ? (
             <div className="text-center p-6 text-white">
-              <h3 className="text-xl font-playfair mb-2">Izin Kamera Ditolak</h3>
+              <div className="w-10 h-10 border-4 border-gray-500 border-t-white rounded-full animate-spin mx-auto mb-4" />
+              <p className="font-garamond text-gray-300">Menghubungkan kamera...</p>
+            </div>
+          ) : !hasPermission ? (
+            <div className="text-center p-6 text-white">
+              <h3 className="text-xl font-playfair mb-2">Kamera Tidak Tersedia</h3>
               <p className="font-garamond text-gray-400 mb-6">{cameraError}</p>
               <button 
                 onClick={initCamera}
@@ -169,7 +198,7 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
         </div>
 
         {/* Kontrol Bawah Box */}
-        {hasPermission && (
+        {hasPermission && !isRequestingPermission && (
           <div className="mt-6 flex justify-center items-center h-16">
             {!currentDraft ? (
               <button 
