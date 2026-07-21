@@ -1,20 +1,18 @@
 {
   "components\\booth\\ResultScreen.jsx -> @/utils/gifExport": {
-    "id": 4167,
+    "id": "components\\booth\\ResultScreen.jsx -> @/utils/gifExport",
     "files": [
-      "static/chunks/167.dfeee3b54fcd1a8b.js"
+      "static/chunks/_app-pages-browser_utils_gifExport_js.js"
     ]
   },
-  "node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
-    "id": 5203,
-    "files": [
-      "static/chunks/203.2b4c1ee4fbe3a7cf.js"
-    ]
+  "components\\booth\\ResultScreen.jsx -> @/utils/videoExport": {
+    "id": "components\\booth\\ResultScreen.jsx -> @/utils/videoExport",
+    "files": []
   },
-  "node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
-    "id": 6218,
+  "node_modules\\next\\dist\\client\\components\\react-dev-overlay\\internal\\helpers\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts": {
+    "id": "node_modules\\next\\dist\\client\\components\\react-dev-overlay\\internal\\helpers\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts",
     "files": [
-      "static/chunks/218.57a830a2c55ba802.js"
+      "static/chunks/_app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js"
     ]
   }
 }
