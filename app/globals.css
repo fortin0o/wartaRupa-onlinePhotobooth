@@ -1,0 +1,51 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Archivo:wght@400;500;600;700;900&display=swap');
+@import "tailwindcss";
+
+:root {
+  --ink:     #111111;
+  --cream:   #fcf8ed;
+  --paper:   #f4ecd8;
+  --accent:  #d9381e;
+  --border:  #111111;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'EB Garamond', Georgia, serif;
+  --font-ui:      'Archivo', system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-ink:     var(--ink);
+  --color-cream:   var(--cream);
+  --color-paper:   var(--paper);
+  --color-accent:  var(--accent);
+  --color-border:  var(--border);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+.font-ui      { font-family: var(--font-ui); }
+
+.rule-double {
+  border: none;
+  border-top: 4px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 2px 0;
+}
+
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
