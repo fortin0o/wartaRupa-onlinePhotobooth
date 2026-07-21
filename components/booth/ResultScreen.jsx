@@ -13,6 +13,11 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   const [videoUrl, setVideoUrl] = useState(null);
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [videoError, setVideoError] = useState(null);
+
+  const [gifUrl, setGifUrl] = useState(null);
+  const [isGeneratingGif, setIsGeneratingGif] = useState(false);
+  const [gifError, setGifError] = useState(null);
+
   const hasCompleteVideoClips = videoClips && videoClips.length > 0 && videoClips.every(Boolean);
 
   const filterStyle = filters[selectedFilterId] || 'none';
@@ -58,21 +63,45 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     }
   }, [videoClips, selectedFilterId, hasCompleteVideoClips]);
 
+  const generateGif = useCallback(async () => {
+    if (!hasCompleteVideoClips) return;
+    setIsGeneratingGif(true);
+    setGifError(null);
+    try {
+      const { buildBoomerangGif } = await import('@/utils/gifExport');
+      const blob = await buildBoomerangGif(videoClips, selectedFilterId);
+      setGifUrl((prevUrl) => {
+        if (prevUrl) URL.revokeObjectURL(prevUrl);
+        return URL.createObjectURL(blob);
+      });
+    } catch (err) {
+      console.error('Gagal membuat GIF:', err);
+      setGifError('Gagal membuat GIF. Silakan coba lagi.');
+    } finally {
+      setIsGeneratingGif(false);
+    }
+  }, [videoClips, selectedFilterId, hasCompleteVideoClips]);
+
   useEffect(() => {
     generateImage();
   }, [generateImage]);
 
-  // Boomerang dibuat otomatis di latar belakang begitu layar hasil tampil,
-  // supaya sudah siap dipratonton saat pengguna melihat ke panel video.
+  // Video & GIF boomerang dibuat otomatis di latar belakang begitu layar hasil
+  // tampil, supaya sudah siap dipratonton saat pengguna melihat ke panelnya.
   useEffect(() => {
     generateVideo();
   }, [generateVideo]);
 
   useEffect(() => {
+    generateGif();
+  }, [generateGif]);
+
+  useEffect(() => {
     return () => {
       if (videoUrl) URL.revokeObjectURL(videoUrl);
+      if (gifUrl) URL.revokeObjectURL(gifUrl);
     };
-  }, [videoUrl]);
+  }, [videoUrl, gifUrl]);
 
   const handleDownload = () => {
     if (!imageUrl) return;
@@ -88,6 +117,14 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     const link = document.createElement('a');
     link.download = `warta-rupa-boomerang-${Date.now()}.webm`;
     link.href = videoUrl;
+    link.click();
+  };
+
+  const handleDownloadGif = () => {
+    if (!gifUrl) return;
+    const link = document.createElement('a');
+    link.download = `warta-rupa-boomerang-${Date.now()}.gif`;
+    link.href = gifUrl;
     link.click();
   };
 
@@ -129,7 +166,7 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
         </p>
       </div>
 
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-8">
         {/* Panel Gambar (PNG) */}
         <div className="flex flex-col items-center">
           {isGenerating ? (
@@ -198,18 +235,65 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
               <div className="p-3 bg-white border-2 border-ink shadow-hard mb-6 w-full flex justify-center">
                 <video
                   src={videoUrl}
-                  controls
+                  autoPlay
                   loop
                   muted
                   playsInline
-                  className="max-h-[60vh] w-auto object-contain mx-auto"
+                  disablePictureInPicture
+                  controlsList="nodownload nofullscreen noremoteplayback"
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="max-h-[60vh] w-auto object-contain mx-auto pointer-events-none"
                 />
               </div>
               <button
                 onClick={handleDownloadVideo}
                 className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
               >
-                Download Video Boomerang
+                Download Video (WebM)
+              </button>
+            </>
+          ) : null}
+        </div>
+
+        {/* Panel GIF Boomerang */}
+        <div className="flex flex-col items-center">
+          {!hasCompleteVideoClips ? (
+            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px] text-center">
+              <p className="font-body text-gray-500">
+                GIF boomerang tidak tersedia untuk sesi ini.
+              </p>
+            </div>
+          ) : isGeneratingGif ? (
+            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px]">
+              <div className="w-12 h-12 border-4 border-gray-300 border-t-ink rounded-full animate-spin mb-4"></div>
+              <p className="font-body text-lg animate-pulse">Membuat GIF boomerang...</p>
+            </div>
+          ) : gifError ? (
+            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-accent shadow-hard w-full min-h-[300px] text-center">
+              <div className="text-4xl mb-4">⚠️</div>
+              <p className="font-display font-bold text-xl mb-2">Oops, Gagal!</p>
+              <p className="font-body text-gray-600 mb-6">{gifError}</p>
+              <button
+                onClick={generateGif}
+                className="px-6 py-2 bg-ink text-cream font-ui font-bold uppercase tracking-wider hover:bg-accent transition-colors"
+              >
+                Coba Lagi
+              </button>
+            </div>
+          ) : gifUrl ? (
+            <>
+              <div className="p-3 bg-white border-2 border-ink shadow-hard mb-6 w-full flex justify-center">
+                <img
+                  src={gifUrl}
+                  alt="GIF Boomerang"
+                  className="max-h-[60vh] w-auto object-contain mx-auto"
+                />
+              </div>
+              <button
+                onClick={handleDownloadGif}
+                className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
+              >
+                Download GIF (buka di HP)
               </button>
             </>
           ) : null}

@@ -35,12 +35,10 @@ export const getRandomHeadline = () => {
 };
 
 export const getRandomArticle = () => {
-  // Ambil secara acak antara 2 sampai 3 kalimat
-  const count = Math.floor(Math.random() * 2) + 2; 
-  
-  // Duplikasi dan acak array kalimat
-  const shuffled = [...articleSentences].sort(() => 0.5 - Math.random());
-  
-  // Ambil 'count' kalimat teratas dan gabungkan dengan spasi
-  return shuffled.slice(0, count).join(" ");
+  // Beberapa template newspaper memotong artikel ini berdasarkan jumlah kata
+  // (mis. slice(100, 125)) untuk mengisi kolom teks yang panjang. Gabungkan
+  // beberapa putaran kalimat teracak agar hasilnya selalu cukup panjang
+  // (~300+ kata) dan tidak menyisakan ruang kosong di template manapun.
+  const shuffleOnce = () => [...articleSentences].sort(() => 0.5 - Math.random());
+  return [...shuffleOnce(), ...shuffleOnce(), ...shuffleOnce()].join(" ");
 };

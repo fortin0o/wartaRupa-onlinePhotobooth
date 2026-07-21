@@ -1,4 +1,10 @@
 {
+  "components\\booth\\ResultScreen.jsx -> @/utils/gifExport": {
+    "id": "components\\booth\\ResultScreen.jsx -> @/utils/gifExport",
+    "files": [
+      "static/chunks/_app-pages-browser_utils_gifExport_js.js"
+    ]
+  },
   "components\\booth\\ResultScreen.jsx -> @/utils/videoExport": {
     "id": "components\\booth\\ResultScreen.jsx -> @/utils/videoExport",
     "files": []
