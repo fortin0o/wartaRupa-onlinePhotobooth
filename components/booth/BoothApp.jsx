@@ -65,7 +65,7 @@ export default function BoothApp() {
   };
 
   return (
-    <div className='min-h-screen font-sans text-black bg-gray-100'>
+    <div className='min-h-screen bg-cream grain'>
       {currentScreen === 'home' && (
         <HomeScreen onSelectTemplate={handleSelectTemplate} />
       )}

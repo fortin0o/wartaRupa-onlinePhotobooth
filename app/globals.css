@@ -41,6 +41,9 @@ body {
   padding: 2px 0;
 }
 
+.shadow-hard-sm { box-shadow: 4px 4px 0 0 var(--ink); }
+.shadow-hard    { box-shadow: 8px 8px 0 0 var(--ink); }
+
 .grain::after {
   content: '';
   position: fixed;

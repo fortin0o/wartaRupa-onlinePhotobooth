@@ -3,8 +3,6 @@ import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
 
 const StripFilmReel = ({ photos = [], filterStyle = "none" }) => {
-  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
-  
   // Bikin lubang-lubang film
   const holes = Array(12).fill(0);
 
@@ -20,11 +18,11 @@ const StripFilmReel = ({ photos = [], filterStyle = "none" }) => {
 
       {/* Konten Utama */}
       <div className="flex-1 flex flex-col gap-2 py-4">
-        {[0, 1, 2].map((i) => (
+        {photos.map((photo, i) => (
           <div key={i} className="bg-black border-y-2 border-[#222]">
-            <img 
-              src={photos[i] || placeholders[i]} 
-              alt={`Film ${i+1}`} 
+            <img
+              src={photo || PLACEHOLDER_STRIP}
+              alt={`Film ${i+1}`}
               className="w-full aspect-[4/3] object-cover opacity-90 sepia-[0.2]" 
               style={{ filter: filterStyle }}
             />

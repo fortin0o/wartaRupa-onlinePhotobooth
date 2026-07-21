@@ -3,8 +3,6 @@ import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
 
 const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
-  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
-
   // Pola checkerboard biru navy dan putih
   const checkerboardBg = {
     background: 'repeating-conic-gradient(#1a2f4f 0 25%, transparent 0 50%) 50% / 20px 20px',
@@ -24,8 +22,8 @@ const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
   );
 
   return (
-    <div 
-      className="p-5 w-[260px] mx-auto flex flex-col font-sans box-border relative overflow-hidden shadow-none min-h-[700px]" 
+    <div
+      className="p-5 w-[260px] mx-auto flex flex-col font-sans box-border relative overflow-hidden shadow-none"
       style={checkerboardBg}
     >
       {/* Dekorasi Bintang Acak */}
@@ -35,12 +33,12 @@ const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
 
       {/* Kontainer Foto Polaroid */}
       <div className="flex-1 flex flex-col gap-6 py-2 z-10 relative">
-        {[0, 1, 2].map((i) => (
+        {photos.map((photo, i) => (
           <div key={i} className="bg-white p-3 shadow-[4px_4px_12px_rgba(0,0,0,0.35)] relative">
             <div className="bg-gray-100 border border-gray-200">
-              <img 
-                src={photos[i] || placeholders[i]} 
-                alt={`Photo ${i+1}`} 
+              <img
+                src={photo || PLACEHOLDER_STRIP}
+                alt={`Photo ${i+1}`}
                 className="w-full aspect-square object-cover" 
                 style={{ filter: filterStyle }}
               />

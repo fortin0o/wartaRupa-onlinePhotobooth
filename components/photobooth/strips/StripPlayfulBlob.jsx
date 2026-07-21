@@ -46,11 +46,9 @@ const SmileyFace = ({ cx, cy, r, color, style }) => (
 );
 
 const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
-  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
-
   return (
     <div
-      className="w-[260px] mx-auto flex flex-col font-sans box-border relative overflow-hidden shadow-none min-h-[720px] py-6 px-5"
+      className="w-[260px] mx-auto flex flex-col font-sans box-border relative overflow-hidden shadow-none py-6 px-5"
       style={{ backgroundColor: '#faf3e0' }}
     >
       {/* Smiley Dekorasi 1 — sudut kiri atas */}
@@ -69,14 +67,14 @@ const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
 
       {/* Foto-foto */}
       <div className="flex flex-col gap-8 mt-10 z-10 relative">
-        {[0, 1, 2].map((i) => (
+        {photos.map((photo, i) => (
           <div key={i} className="relative flex justify-center">
             {/* Blob Aksen Berwarna di belakang foto (offset sedikit) */}
             <div
               className="absolute inset-0"
               style={{
-                ...blobShapes[i],
-                backgroundColor: accentColors[i],
+                ...blobShapes[i % blobShapes.length],
+                backgroundColor: accentColors[i % accentColors.length],
                 transform: 'translate(6px, 6px)',
               }}
             />
@@ -85,12 +83,12 @@ const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
             <div
               className="relative overflow-hidden w-full"
               style={{
-                ...blobShapes[i],
+                ...blobShapes[i % blobShapes.length],
                 aspectRatio: '1 / 1',
               }}
             >
               <img
-                src={photos[i] || placeholders[i]}
+                src={photo || PLACEHOLDER_STRIP}
                 alt={`Photo ${i + 1}`}
                 className="w-full h-full object-cover"
                 style={{ filter: filterStyle }}
@@ -103,12 +101,12 @@ const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
               style={{
                 backgroundColor: i % 2 === 0 ? '#fff9e6' : '#eef2ff',
                 borderRadius: '3px',
-                transform: `rotate(${washiRotations[i]})`,
+                transform: `rotate(${washiRotations[i % washiRotations.length]})`,
                 boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
                 fontFamily: 'serif',
               }}
             >
-              {washiLabels[i]}
+              {washiLabels[i % washiLabels.length]}
             </div>
           </div>
         ))}

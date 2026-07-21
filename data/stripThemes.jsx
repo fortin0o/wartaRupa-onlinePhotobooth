@@ -8,47 +8,53 @@ import StripPlayfulBlob from '../components/photobooth/strips/StripPlayfulBlob';
 
 
 export const stripThemes = [
-  { 
-    id: "classic", 
-    name: "Classic", 
-    component: StripClassic, 
-    desc: "Minimalis, frame putih" 
+  {
+    id: "classic",
+    name: "Classic",
+    component: StripClassic,
+    desc: "Minimalis, frame putih",
+    supportedCounts: [2, 3, 4],
   },
-  { 
-    id: "filmreel", 
-    name: "Film Reel", 
-    component: StripFilmReel, 
-    desc: "Roll film analog" 
+  {
+    id: "filmreel",
+    name: "Film Reel",
+    component: StripFilmReel,
+    desc: "Roll film analog",
+    supportedCounts: [2, 3, 4],
   },
-  { 
-    id: "polaroid", 
-    name: "Polaroid", 
-    component: StripPolaroid, 
-    desc: "Tumpukan gaya polaroid" 
+  {
+    id: "polaroid",
+    name: "Polaroid",
+    component: StripPolaroid,
+    desc: "Tumpukan gaya polaroid",
+    supportedCounts: [2, 3, 4],
   },
-  { 
-    id: "cute", 
-    name: "Cute Pastel", 
-    component: StripCute, 
-    desc: "Warna ceria & membulat" 
+  {
+    id: "cute",
+    name: "Cute Pastel",
+    component: StripCute,
+    desc: "Warna ceria & membulat",
+    supportedCounts: [2, 3, 4],
   },
   {
     id: "denim",
     name: "Denim Scrapbook",
     component: StripDenim,
-    desc: "Gaya jahitan denim"
+    desc: "Gaya jahitan denim",
+    supportedCounts: [2, 3, 4],
   },
   {
     id: "polaroidstripes",
     name: "Polaroid Stripes",
     component: StripPolaroidStripes,
-    desc: "Pola checker & starburst"
+    desc: "Pola checker & starburst",
+    supportedCounts: [2, 3, 4],
   },
   {
     id: "playfulblob",
     name: "Playful Blob",
     component: StripPlayfulBlob,
-    desc: "Blob organik & washi tape"
+    desc: "Blob organik & washi tape",
+    supportedCounts: [2, 3, 4],
   }
 ];
-

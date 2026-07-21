@@ -3,8 +3,6 @@ import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
 
 const StripDenim = ({ photos = [], filterStyle = "none" }) => {
-  const placeholders = [PLACEHOLDER_STRIP, PLACEHOLDER_STRIP, PLACEHOLDER_STRIP];
-
   const denimBackground = {
     background: 'repeating-linear-gradient(45deg, #2d4a6b, #2d4a6b 2px, #34527a 2px, #34527a 4px)'
   };
@@ -15,8 +13,8 @@ const StripDenim = ({ photos = [], filterStyle = "none" }) => {
   };
 
   return (
-    <div 
-      className="p-4 w-[240px] mx-auto flex flex-col font-sans box-border relative overflow-hidden shadow-none min-h-[700px]" 
+    <div
+      className="p-4 w-[240px] mx-auto flex flex-col font-sans box-border relative overflow-hidden shadow-none"
       style={denimBackground}
     >
       {/* Dekorasi 1: Bintang Outline */}
@@ -60,16 +58,16 @@ const StripDenim = ({ photos = [], filterStyle = "none" }) => {
 
       {/* Wrapper Foto */}
       <div className="flex-1 flex flex-col gap-6 py-6 z-10 relative">
-        {[0, 1, 2].map((i) => (
-          <div 
-            key={i} 
+        {photos.map((photo, i) => (
+          <div
+            key={i}
             className="bg-white p-3 shadow-lg flex flex-col items-center"
             style={tornPaperClipPath}
           >
             <div className="bg-gray-200 w-full mb-2">
-              <img 
-                src={photos[i] || placeholders[i]} 
-                alt={`Denim Photo ${i+1}`} 
+              <img
+                src={photo || PLACEHOLDER_STRIP}
+                alt={`Denim Photo ${i+1}`}
                 className="w-full aspect-[4/3] object-cover" 
                 style={{ filter: filterStyle }}
               />

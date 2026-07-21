@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { toPng } from 'html-to-image';
 import { stripThemes } from '@/data/stripThemes';
 import { newspaperThemes } from '@/data/newspaperThemes';
@@ -9,6 +9,10 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
   const [exportError, setExportError] = useState(null);
+
+  const [isGeneratingGif, setIsGeneratingGif] = useState(false);
+  const [gifError, setGifError] = useState(null);
+  const gifUrlRef = useRef(null);
 
   const filterStyle = filters[selectedFilterId] || 'none';
 
@@ -38,6 +42,12 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
     generateImage();
   }, [generateImage]);
 
+  useEffect(() => {
+    return () => {
+      if (gifUrlRef.current) URL.revokeObjectURL(gifUrlRef.current);
+    };
+  }, []);
+
   const handleDownload = () => {
     if (!imageUrl) return;
     const link = document.createElement('a');
@@ -45,6 +55,37 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
     link.download = `warta-rupa-${timestamp}.png`;
     link.href = imageUrl;
     link.click();
+  };
+
+  const handleDownloadGif = async () => {
+    if (isGeneratingGif) return;
+
+    if (gifUrlRef.current) {
+      const link = document.createElement('a');
+      link.download = `warta-rupa-boomerang-${Date.now()}.gif`;
+      link.href = gifUrlRef.current;
+      link.click();
+      return;
+    }
+
+    setIsGeneratingGif(true);
+    setGifError(null);
+    try {
+      const { buildBoomerangGif } = await import('@/utils/gifExport');
+      const blob = await buildBoomerangGif(photos, selectedFilterId);
+      const url = URL.createObjectURL(blob);
+      gifUrlRef.current = url;
+
+      const link = document.createElement('a');
+      link.download = `warta-rupa-boomerang-${Date.now()}.gif`;
+      link.href = url;
+      link.click();
+    } catch (err) {
+      console.error('Gagal membuat GIF:', err);
+      setGifError('Gagal membuat GIF. Silakan coba lagi.');
+    } finally {
+      setIsGeneratingGif(false);
+    }
   };
 
   // Resolve strip component
@@ -58,8 +99,8 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
     : null;
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4 pb-12 sm:pb-16 overflow-y-auto">
-      
+    <div className="flex flex-col items-center min-h-screen bg-cream p-4 pb-12 sm:pb-16 overflow-y-auto">
+
       {/* Hidden Container: Target render untuk html-to-image */}
       <div className="absolute left-[-9999px] top-[-9999px]">
         <div ref={templateRef}>
@@ -79,59 +120,71 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, select
       </div>
 
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-playfair font-bold mb-2">Hasil Akhir</h2>
-        <p className="font-garamond text-gray-600">
+        <h2 className="text-3xl font-display font-bold mb-2">Hasil Akhir</h2>
+        <p className="font-body text-gray-600">
           Preview gambar persis seperti yang akan Anda download.
         </p>
       </div>
 
       {isGenerating ? (
-        <div className="flex flex-col items-center justify-center p-12 bg-white rounded shadow-lg mb-8 min-w-[300px]">
-          <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
-          <p className="font-garamond text-lg animate-pulse">Menyiapkan hasil...</p>
+        <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard mb-8 min-w-[300px]">
+          <div className="w-12 h-12 border-4 border-gray-300 border-t-ink rounded-full animate-spin mb-4"></div>
+          <p className="font-body text-lg animate-pulse">Menyiapkan hasil...</p>
         </div>
       ) : exportError ? (
-        <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-red-300 rounded shadow-lg mb-8 min-w-[300px] text-center">
-          <div className="text-4xl mb-4">âš ï¸</div>
-          <p className="font-playfair font-bold text-xl mb-2">Oops, Gagal!</p>
-          <p className="font-garamond text-gray-600 mb-6">{exportError}</p>
+        <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-accent shadow-hard mb-8 min-w-[300px] text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <p className="font-display font-bold text-xl mb-2">Oops, Gagal!</p>
+          <p className="font-body text-gray-600 mb-6">{exportError}</p>
           <button
             onClick={generateImage}
-            className="px-6 py-2 bg-black text-white font-garamond font-bold hover:bg-gray-800 transition-colors"
+            className="px-6 py-2 bg-ink text-cream font-ui font-bold uppercase tracking-wider hover:bg-accent transition-colors"
           >
             Coba Lagi
           </button>
         </div>
       ) : (
         <>
-          <div className="mb-8 p-3 bg-white shadow-2xl border border-gray-200">
-            <img 
-              src={imageUrl} 
-              alt="Hasil Photobooth" 
+          <div className="mb-8 p-3 bg-white border-2 border-ink shadow-hard">
+            <img
+              src={imageUrl}
+              alt="Hasil Photobooth"
               className="max-h-[65vh] w-auto object-contain mx-auto"
             />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-            <button 
+            <button
               onClick={onReset}
-              className="flex-1 px-6 py-3 border-2 border-black rounded hover:bg-gray-200 font-garamond text-lg transition-colors"
+              className="flex-1 px-6 py-3 border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-white transition-colors"
             >
               Buat Ulang
             </button>
-            <button 
+            <button
               onClick={handleDownload}
-              className="flex-1 px-6 py-3 bg-black text-white rounded font-garamond text-lg hover:bg-gray-800 shadow-xl transition-transform hover:-translate-y-1"
+              className="flex-1 px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
             >
               Download PNG
             </button>
           </div>
+
+          <div className="w-full max-w-md mt-4">
+            <button
+              onClick={handleDownloadGif}
+              disabled={isGeneratingGif}
+              className={`w-full px-6 py-3 border-2 border-ink font-ui font-bold uppercase tracking-wider transition-colors shadow-hard-sm ${isGeneratingGif ? 'opacity-50 cursor-not-allowed bg-white text-ink' : 'bg-white text-ink hover:bg-ink hover:text-cream'}`}
+            >
+              {isGeneratingGif ? 'Membuat GIF...' : 'Download GIF Boomerang'}
+            </button>
+            {gifError && (
+              <p className="font-body text-sm text-accent mt-2 text-center">{gifError}</p>
+            )}
+          </div>
         </>
       )}
-      
+
     </div>
   );
 };
 
 export default ResultScreen;
-

@@ -18,7 +18,7 @@ const getCameraErrorMessage = (err) => {
   return 'Gagal mengakses kamera. Pastikan tidak ada aplikasi lain yang menggunakannya.';
 };
 
-const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeIndex = null, onCapture, onCaptureRetake, onBack }) => {
+const CameraScreen = ({ requiredPhotoCount = 3, retakeIndex = null, onCapture, onCaptureRetake, onBack }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   
@@ -127,26 +127,26 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
   const currentPhotoNumber = isRetakeMode ? retakeIndex + 1 : confirmedPhotos.length + 1;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f4ecd8] px-4 py-8 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-paper px-4 py-8 relative">
       <canvas ref={canvasRef} className="hidden" />
 
       {/* Header & Indikator */}
       <div className="w-full max-w-[480px] flex justify-between items-center mb-6">
-        <button 
+        <button
           onClick={onBack}
           disabled={isCounting}
-          className={`px-4 py-2 border-2 border-black font-garamond font-bold hover:bg-black hover:text-white transition-colors ${isCounting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`px-4 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-ink hover:text-cream transition-colors ${isCounting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           Kembali
         </button>
-        <div className="font-playfair text-xl font-bold bg-white px-4 py-2 border-2 border-black shadow-[4px_4px_0_0_#000]">
+        <div className="font-display text-xl font-bold bg-cream px-4 py-2 border-2 border-ink shadow-hard-sm">
           {isRetakeMode ? `Ambil Ulang Foto Ke-${currentPhotoNumber}` : `Foto ${Math.min(currentPhotoNumber, requiredPhotoCount)} dari ${requiredPhotoCount}`}
         </div>
       </div>
 
       {/* Box Kamera Container */}
-      <div className="w-full max-w-[480px] bg-white border-4 border-black p-4 shadow-[8px_8px_0_0_#000]">
-        
+      <div className="w-full max-w-[480px] bg-cream border-4 border-ink p-4 shadow-hard">
+
         {/* Aspect Ratio Wrapper (4:3) */}
         <div className="relative w-full aspect-[4/3] bg-gray-900 border-2 border-gray-300 overflow-hidden flex items-center justify-center">
           
@@ -174,18 +174,18 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
           {isRequestingPermission && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20">
               <div className="w-10 h-10 border-4 border-gray-500 border-t-white rounded-full animate-spin mb-4" />
-              <p className="font-garamond text-gray-300">Menghubungkan kamera...</p>
+              <p className="font-body text-gray-300">Menghubungkan kamera...</p>
             </div>
           )}
 
           {/* Overlay: error state jika izin ditolak / kamera tidak ditemukan */}
           {!isRequestingPermission && !hasPermission && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20 p-6 text-center">
-              <h3 className="text-xl font-playfair mb-2 text-white">Kamera Tidak Tersedia</h3>
-              <p className="font-garamond text-gray-400 mb-6">{cameraError}</p>
-              <button 
+              <h3 className="text-xl font-display mb-2 text-white">Kamera Tidak Tersedia</h3>
+              <p className="font-body text-gray-400 mb-6">{cameraError}</p>
+              <button
                 onClick={initCamera}
-                className="px-6 py-2 bg-white text-black rounded font-garamond hover:bg-gray-200 transition"
+                className="px-6 py-2 bg-cream text-ink font-ui font-bold uppercase tracking-wider hover:bg-white transition"
               >
                 Coba Lagi
               </button>
@@ -195,7 +195,7 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
           {/* Overlay: countdown */}
           {countdown !== null && (
             <div className="absolute inset-0 flex items-center justify-center z-30">
-              <div className="text-8xl font-playfair font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
+              <div className="text-8xl font-display font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
                 {countdown}
               </div>
             </div>
@@ -207,23 +207,23 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
         {hasPermission && !isRequestingPermission && (
           <div className="mt-6 flex justify-center items-center h-16">
             {!currentDraft ? (
-              <button 
+              <button
                 onClick={startCountdownAndCapture}
                 disabled={isCounting}
-                className={`w-16 h-16 bg-red-600 rounded-full border-4 border-black shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] hover:bg-red-700 transition-all ${isCounting ? 'opacity-50 cursor-not-allowed transform-none shadow-[2px_2px_0_0_#000]' : ''}`}
+                className={`w-16 h-16 bg-accent rounded-full border-4 border-ink shadow-hard-sm hover:translate-y-1 hover:shadow-none transition-all ${isCounting ? 'opacity-50 cursor-not-allowed transform-none shadow-none' : ''}`}
                 title="Ambil Foto"
               ></button>
             ) : (
               <div className="flex gap-4 w-full">
-                <button 
+                <button
                   onClick={handleRetake}
-                  className="flex-1 py-3 border-2 border-black font-garamond text-lg font-bold hover:bg-gray-100 transition-colors"
+                  className="flex-1 py-3 border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-white transition-colors"
                 >
                   Retake
                 </button>
-                <button 
+                <button
                   onClick={handleNext}
-                  className="flex-1 py-3 bg-black text-white border-2 border-black font-garamond text-lg font-bold hover:bg-gray-800 transition-colors shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
+                  className="flex-1 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
                 >
                   {isRetakeMode ? 'Simpan' : (currentPhotoNumber >= requiredPhotoCount ? 'Selesai' : 'Lanjut')}
                 </button>
