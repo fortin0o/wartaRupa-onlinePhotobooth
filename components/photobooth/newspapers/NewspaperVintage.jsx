@@ -83,7 +83,7 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
               style={{ filter: vintageFilter }}
             />
             <span className="font-playfair font-bold text-[9px] uppercase text-center leading-tight">
-              "Candid moments captured in perfect unity."
+              &ldquo;Candid moments captured in perfect unity.&rdquo;
             </span>
           </div>
         </div>

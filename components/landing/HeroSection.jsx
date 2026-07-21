@@ -16,7 +16,7 @@ export default function HeroSection() {
           Warta Rupa
         </h1>
         <p className="font-body italic text-xl md:text-2xl max-w-2xl mx-auto">
-          "Merangkai Kenangan dalam Lembaran Berita"
+          &ldquo;Merangkai Kenangan dalam Lembaran Berita&rdquo;
         </p>
       </div>
 
