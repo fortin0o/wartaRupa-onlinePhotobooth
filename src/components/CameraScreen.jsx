@@ -150,14 +150,38 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
         {/* Aspect Ratio Wrapper (4:3) */}
         <div className="relative w-full aspect-[4/3] bg-gray-900 border-2 border-gray-300 overflow-hidden flex items-center justify-center">
           
-          {isRequestingPermission ? (
-            <div className="text-center p-6 text-white">
-              <div className="w-10 h-10 border-4 border-gray-500 border-t-white rounded-full animate-spin mx-auto mb-4" />
+          {/* Video selalu ada di DOM agar videoRef.current valid saat initCamera() meng-assign srcObject */}
+          <video 
+            ref={videoRef}
+            autoPlay 
+            playsInline 
+            muted
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            className={`absolute inset-0 w-full h-full object-cover -scale-x-100 ${currentDraft || !hasPermission ? 'opacity-0' : 'opacity-100'}`}
+          />
+
+          {/* Overlay: foto draft setelah capture */}
+          {currentDraft && (
+            <img 
+              src={currentDraft} 
+              alt="Draft Foto" 
+              className="absolute inset-0 w-full h-full object-cover z-10" 
+            />
+          )}
+
+          {/* Overlay: spinner saat meminta izin */}
+          {isRequestingPermission && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20">
+              <div className="w-10 h-10 border-4 border-gray-500 border-t-white rounded-full animate-spin mb-4" />
               <p className="font-garamond text-gray-300">Menghubungkan kamera...</p>
             </div>
-          ) : !hasPermission ? (
-            <div className="text-center p-6 text-white">
-              <h3 className="text-xl font-playfair mb-2">Kamera Tidak Tersedia</h3>
+          )}
+
+          {/* Overlay: error state jika izin ditolak / kamera tidak ditemukan */}
+          {!isRequestingPermission && !hasPermission && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-20 p-6 text-center">
+              <h3 className="text-xl font-playfair mb-2 text-white">Kamera Tidak Tersedia</h3>
               <p className="font-garamond text-gray-400 mb-6">{cameraError}</p>
               <button 
                 onClick={initCamera}
@@ -166,36 +190,18 @@ const CameraScreen = ({ template = 'photostrip', requiredPhotoCount = 3, retakeI
                 Coba Lagi
               </button>
             </div>
-          ) : (
-            <>
-              <video 
-                ref={videoRef}
-                autoPlay 
-                playsInline 
-                muted
-                disablePictureInPicture
-                controlsList="nodownload nofullscreen noremoteplayback"
-                className={`absolute inset-0 w-full h-full object-cover -scale-x-100 ${currentDraft ? 'opacity-0' : 'opacity-100'}`}
-              />
-              
-              {currentDraft && (
-                <img 
-                  src={currentDraft} 
-                  alt="Draft Foto" 
-                  className="absolute inset-0 w-full h-full object-cover z-10" 
-                />
-              )}
+          )}
 
-              {countdown !== null && (
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <div className="text-8xl font-playfair font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
-                    {countdown}
-                  </div>
-                </div>
-              )}
-            </>
+          {/* Overlay: countdown */}
+          {countdown !== null && (
+            <div className="absolute inset-0 flex items-center justify-center z-30">
+              <div className="text-8xl font-playfair font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] animate-pulse">
+                {countdown}
+              </div>
+            </div>
           )}
         </div>
+
 
         {/* Kontrol Bawah Box */}
         {hasPermission && !isRequestingPermission && (
