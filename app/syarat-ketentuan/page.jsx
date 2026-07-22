@@ -27,7 +27,7 @@ export default function SyaratKetentuanPage() {
               
               <h2 className="font-display font-bold text-2xl uppercase mt-8 mb-4 border-b border-ink pb-2">1. Penggunaan Layanan</h2>
               <p>
-                Warta Rupa menyediakan fasilitas photobooth digital yang beroperasi sepenuhnya pada peramban web (browser) pengguna. Layanan ini diberikan "sebagaimana adanya" tanpa jaminan ketersediaan mutlak setiap saat.
+                Warta Rupa menyediakan fasilitas photobooth digital yang beroperasi sepenuhnya pada peramban web (browser) pengguna. Layanan ini diberikan &ldquo;sebagaimana adanya&rdquo; tanpa jaminan ketersediaan mutlak setiap saat.
               </p>
               
               <h2 className="font-display font-bold text-2xl uppercase mt-8 mb-4 border-b border-ink pb-2">2. Hak Kekayaan Intelektual</h2>
