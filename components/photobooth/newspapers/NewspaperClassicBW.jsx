@@ -50,7 +50,7 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
       {/* ── HEADLINE ─────────────────────────────────────── */}
       <div className="shrink-0 mb-4 px-2">
-        <h2 className="font-playfair font-black text-3xl uppercase text-center leading-[1] tracking-tight">
+        <h2 className="font-playfair font-black text-3xl uppercase text-center leading-[1] tracking-tight line-clamp-2">
           {headline}
         </h2>
       </div>
@@ -73,8 +73,8 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
             <h3 className="font-bold text-[10px] uppercase mb-1 border-b border-[#111] pb-1">
               Sorotan Hari Ini
             </h3>
-            <p className="font-garamond text-[11px] text-justify leading-snug">
-              {article.split(' ').slice(0, 55).join(' ')}...
+            <p className="font-garamond text-[11px] text-justify leading-snug line-clamp-6">
+              {article.split(' ').slice(0, 45).join(' ')}...
             </p>
           </div>
           
@@ -88,8 +88,8 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
                 style={{ filter: bwFilter }}
               />
             </div>
-            <p className="font-garamond text-[11px] text-justify leading-snug">
-              {article.split(' ').slice(55, 75).join(' ')}...
+            <p className="font-garamond text-[11px] text-justify leading-snug line-clamp-4">
+              {article.split(' ').slice(45, 65).join(' ')}...
             </p>
           </div>
         </div>

@@ -75,14 +75,14 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         
         {/* Left Column */}
         <div className="flex-1 flex flex-col">
-          <h3 className="font-playfair font-bold text-[1rem] uppercase leading-tight tracking-tight mb-2">
+          <h3 className="font-playfair font-bold text-[1rem] uppercase leading-tight tracking-tight mb-2 line-clamp-3">
             {headline}
           </h3>
-          <p className="font-garamond text-[10px] text-justify leading-snug mb-3">
-            {article.split(' ').slice(0, 35).join(' ')}...
+          <p className="font-garamond text-[10px] text-justify leading-snug mb-2 line-clamp-4">
+            {article.split(' ').slice(0, 20).join(' ')}...
           </p>
-          <p className="font-garamond text-[10px] text-justify leading-snug mb-3">
-            {article.split(' ').slice(35, 65).join(' ')}...
+          <p className="font-garamond text-[10px] text-justify leading-snug mb-2 line-clamp-5 overflow-hidden">
+            {article.split(' ').slice(20, 45).join(' ')}...
           </p>
           
           {/* Quote / Small Photo Box */}
@@ -109,11 +109,11 @@ const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
               style={{ filter: vintageFilter }}
             />
           </div>
-          <p className="font-garamond text-[10px] text-justify leading-snug mb-2">
-            {article.split(' ').slice(65, 100).join(' ')}...
+          <p className="font-garamond text-[10px] text-justify leading-snug mb-2 line-clamp-4">
+            {article.split(' ').slice(45, 65).join(' ')}...
           </p>
-          <p className="font-garamond text-[10px] text-justify leading-snug mt-auto">
-            {article.split(' ').slice(100, 125).join(' ')}...
+          <p className="font-garamond text-[10px] text-justify leading-snug mt-auto line-clamp-3">
+            {article.split(' ').slice(65, 80).join(' ')}...
           </p>
         </div>
         

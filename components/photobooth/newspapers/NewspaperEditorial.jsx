@@ -55,7 +55,7 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         </p>
         
         <h2
-          className="font-archivo text-[1.5rem] leading-[1.1] text-black"
+          className="font-archivo text-[1.5rem] leading-[1.1] text-black line-clamp-2"
           style={{ fontWeight: 600, letterSpacing: '-0.025em' }}
         >
           {headline}
@@ -63,7 +63,7 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
       </div>
 
       {/* ── FOTO BESAR — full bleed, nempel ke tepi ──────── */}
-      <div className="relative w-full h-[300px] shrink-0 border-y border-[#ddd]">
+      <div className="relative w-full h-[270px] shrink-0 border-y border-[#ddd]">
         <img
           src={mainPhotoSrc}
           alt="Foto Utama"
@@ -94,8 +94,8 @@ const NewspaperEditorial = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
           >
             Sorotan Hari Ini
           </div>
-          <p className="font-garamond text-[12px] text-gray-700 leading-snug text-justify">
-            {article.split(' ').slice(0, 25).join(' ')}...
+          <p className="font-garamond text-[12px] text-gray-700 leading-snug text-justify line-clamp-2">
+            {article.split(' ').slice(0, 20).join(' ')}...
           </p>
         </div>
         
