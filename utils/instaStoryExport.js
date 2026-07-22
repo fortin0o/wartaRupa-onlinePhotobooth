@@ -54,7 +54,9 @@ export async function buildInstaStoryImage(imageDataUrl) {
   ctx.font = "700 44px 'Playfair Display', Georgia, serif";
   ctx.fillText('WARTA RUPA', STORY_WIDTH / 2, fgY + fgH + 90);
 
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), 'image/png');
-  });
+  // toDataURL (sinkron) dipakai alih-alih toBlob — kombinasi ctx.filter (blur)
+  // + canvas.toBlob dikenal tidak reliable di sebagian browser mobile
+  // (callback bisa tidak pernah terpanggil). Pola ini sama seperti PNG utama
+  // yang sudah terbukti jalan.
+  return canvas.toDataURL('image/png');
 }

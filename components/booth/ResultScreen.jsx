@@ -69,11 +69,8 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     setInstaStoryError(null);
     try {
       const { buildInstaStoryImage } = await import('@/utils/instaStoryExport');
-      const blob = await buildInstaStoryImage(imageUrl);
-      setInstaStoryUrl((prevUrl) => {
-        if (prevUrl) URL.revokeObjectURL(prevUrl);
-        return URL.createObjectURL(blob);
-      });
+      const dataUrl = await buildInstaStoryImage(imageUrl);
+      setInstaStoryUrl(dataUrl);
     } catch (err) {
       console.error('Gagal membuat Insta Story:', err);
       setInstaStoryError('Gagal membuat Insta Story. Silakan coba lagi.');
@@ -99,9 +96,8 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   useEffect(() => {
     return () => {
       if (gifUrl) URL.revokeObjectURL(gifUrl);
-      if (instaStoryUrl) URL.revokeObjectURL(instaStoryUrl);
     };
-  }, [gifUrl, instaStoryUrl]);
+  }, [gifUrl]);
 
   const handleDownload = () => {
     if (!imageUrl) return;

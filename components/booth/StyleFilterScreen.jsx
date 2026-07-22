@@ -173,8 +173,8 @@ const StyleFilterScreen = ({
                   <div className="w-full text-center mb-2">
                     <h3 className="font-display text-sm font-bold leading-tight">{theme.name}</h3>
                   </div>
-                  <div className="pointer-events-none flex justify-center overflow-hidden w-full h-[140px]">
-                    <div className="origin-top" style={{ transform: 'scale(0.35)' }}>
+                  <div className="pointer-events-none flex items-center justify-center overflow-hidden w-full h-[240px]">
+                    <div style={{ transform: 'scale(0.35)' }}>
                       {renderTheme(theme)}
                     </div>
                   </div>
