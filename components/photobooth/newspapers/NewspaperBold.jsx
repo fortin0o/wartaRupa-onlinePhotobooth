@@ -1,18 +1,27 @@
 "use client";
-import React, { useMemo } from 'react';
-import { getRandomHeadline, getRandomArticle } from '../../../data/newspaperContent';
+import React, { useState, useEffect } from 'react';
+import { getRandomHeadline, getRandomArticle, headlines, articleSentences } from '../../../data/newspaperContent';
 import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
 
 // Rotasi acak tapi konsisten per render
 const ROTATE_OPTIONS = [-2, -1.5, -1, 0.5, 1, 1.5, 2];
 
+// Nilai awal deterministik (sama di server & client) supaya tidak terjadi
+// hydration mismatch — pemilihan acak sesungguhnya baru terjadi di client
+// lewat useEffect di bawah, setelah hydration selesai.
+const DEFAULT_HEADLINE = headlines[0];
+const DEFAULT_ARTICLE = [...articleSentences, ...articleSentences, ...articleSentences].join(' ');
+
 const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 6).join(' '), []);
-  const article  = useMemo(() => getRandomArticle(), []);
-  const headlineRotate = useMemo(
-    () => ROTATE_OPTIONS[Math.floor(Math.random() * ROTATE_OPTIONS.length)],
-    []
-  );
+  const [headline, setHeadline] = useState(() => DEFAULT_HEADLINE.split(' ').slice(0, 6).join(' '));
+  const [article, setArticle] = useState(DEFAULT_ARTICLE);
+  const [headlineRotate, setHeadlineRotate] = useState(ROTATE_OPTIONS[0]);
+
+  useEffect(() => {
+    setHeadline(getRandomHeadline().split(' ').slice(0, 6).join(' '));
+    setArticle(getRandomArticle());
+    setHeadlineRotate(ROTATE_OPTIONS[Math.floor(Math.random() * ROTATE_OPTIONS.length)]);
+  }, []);
 
   const today = getFormattedDate();
 

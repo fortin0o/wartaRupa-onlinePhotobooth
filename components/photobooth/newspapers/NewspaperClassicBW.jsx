@@ -1,11 +1,22 @@
 "use client";
-import React, { useMemo } from 'react';
-import { getRandomHeadline, getRandomArticle } from '../../../data/newspaperContent';
+import React, { useState, useEffect } from 'react';
+import { getRandomHeadline, getRandomArticle, headlines, articleSentences } from '../../../data/newspaperContent';
 import { getFormattedDate, buildCompositeFilter, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
 
+// Nilai awal deterministik (sama di server & client) supaya tidak terjadi
+// hydration mismatch — pemilihan acak sesungguhnya baru terjadi di client
+// lewat useEffect di bawah, setelah hydration selesai.
+const DEFAULT_HEADLINE = headlines[0];
+const DEFAULT_ARTICLE = [...articleSentences, ...articleSentences, ...articleSentences].join(' ');
+
 const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
-  const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 7).join(' '), []);
-  const article  = useMemo(() => getRandomArticle(), []);
+  const [headline, setHeadline] = useState(() => DEFAULT_HEADLINE.split(' ').slice(0, 7).join(' '));
+  const [article, setArticle] = useState(DEFAULT_ARTICLE);
+
+  useEffect(() => {
+    setHeadline(getRandomHeadline().split(' ').slice(0, 7).join(' '));
+    setArticle(getRandomArticle());
+  }, []);
   
   const today = getFormattedDate();
 
