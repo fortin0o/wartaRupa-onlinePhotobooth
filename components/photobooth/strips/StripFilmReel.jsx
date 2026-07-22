@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripFilmReel = ({ photos = [], filterStyle = "none" }) => {
   // Bikin lubang-lubang film

@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../../data/newspaperContent';
-import { getFormattedDate, buildCompositeFilter, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/photobooth/templateUtils';
+import { getFormattedDate, buildCompositeFilter, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
 
 const NewspaperVintage = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
   const headline = useMemo(() => getRandomHeadline().split(' ').slice(0, 5).join(' '), []); // keep it short for this layout

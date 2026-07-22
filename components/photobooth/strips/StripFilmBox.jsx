@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripFilmBox = ({ photos = [], filterStyle = "none" }) => {
   const holes = Array(10).fill(0);

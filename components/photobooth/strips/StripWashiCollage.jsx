@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const TAPE_COLORS = ['rgba(255,196,138,0.7)', 'rgba(168,213,186,0.7)', 'rgba(168,196,240,0.7)', 'rgba(240,168,214,0.7)'];
 const ROTATIONS = ['-6deg', '4deg', '-3deg', '5deg'];

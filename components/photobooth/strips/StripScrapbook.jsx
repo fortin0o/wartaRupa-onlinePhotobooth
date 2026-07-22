@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const FloralCorner = ({ className }) => (
   <svg viewBox="0 0 60 60" className={className} fill="none" aria-hidden="true">

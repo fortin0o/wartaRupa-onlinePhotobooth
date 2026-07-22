@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
   // Pola checkerboard biru navy dan putih

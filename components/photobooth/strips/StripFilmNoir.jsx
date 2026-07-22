@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { buildCompositeFilter, PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { buildCompositeFilter, PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripFilmNoir = ({ photos = [], filterStyle = "none" }) => {
   const noirFilter = buildCompositeFilter('grayscale(1) contrast(1.3) brightness(0.95)', filterStyle);

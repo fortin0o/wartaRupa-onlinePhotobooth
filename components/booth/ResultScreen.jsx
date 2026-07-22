@@ -14,9 +14,6 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   const [isGeneratingGif, setIsGeneratingGif] = useState(false);
   const [gifError, setGifError] = useState(null);
 
-  const [videoUrl, setVideoUrl] = useState(null);
-  const [videoExt, setVideoExt] = useState('mp4');
-
   const hasCompleteVideoClips = videoClips && videoClips.length > 0 && videoClips.every(Boolean);
 
   const filterStyle = filters[selectedFilterId] || 'none';
@@ -49,23 +46,14 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     setGifError(null);
     try {
       const { buildBoomerangGif } = await import('@/utils/gifExport');
-      const { buildBoomerangVideo } = await import('@/utils/videoExport');
-      
       const gifBlob = await buildBoomerangGif(videoClips, selectedFilterId);
       setGifUrl((prevUrl) => {
         if (prevUrl) URL.revokeObjectURL(prevUrl);
         return URL.createObjectURL(gifBlob);
       });
-
-      const videoResult = await buildBoomerangVideo(videoClips, selectedFilterId);
-      setVideoUrl((prevUrl) => {
-        if (prevUrl) URL.revokeObjectURL(prevUrl);
-        return URL.createObjectURL(videoResult.blob);
-      });
-      setVideoExt(videoResult.ext);
     } catch (err) {
-      console.error('Gagal membuat Boomerang:', err);
-      setGifError('Gagal membuat Boomerang. Silakan coba lagi.');
+      console.error('Gagal membuat GIF:', err);
+      setGifError('Gagal membuat GIF. Silakan coba lagi.');
     } finally {
       setIsGeneratingGif(false);
     }
@@ -84,9 +72,8 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   useEffect(() => {
     return () => {
       if (gifUrl) URL.revokeObjectURL(gifUrl);
-      if (videoUrl) URL.revokeObjectURL(videoUrl);
     };
-  }, [gifUrl, videoUrl]);
+  }, [gifUrl]);
 
   const handleDownload = () => {
     if (!imageUrl) return;
@@ -98,10 +85,10 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   };
 
   const handleDownloadGif = () => {
-    if (!videoUrl) return;
+    if (!gifUrl) return;
     const link = document.createElement('a');
-    link.download = `warta-rupa-boomerang-${Date.now()}.${videoExt}`;
-    link.href = videoUrl;
+    link.download = `warta-rupa-boomerang-${Date.now()}.gif`;
+    link.href = gifUrl;
     link.click();
   };
 
@@ -220,7 +207,7 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
                 onClick={handleDownloadGif}
                 className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
               >
-                Download Video GIF
+                Download GIF
               </button>
             </>
           ) : null}

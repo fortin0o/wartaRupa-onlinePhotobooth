@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { getFormattedDate, PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { getFormattedDate, PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripDisposable = ({ photos = [], filterStyle = "none" }) => {
   const dateStamp = getFormattedDate('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });

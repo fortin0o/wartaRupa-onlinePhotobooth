@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripPolaroid = ({ photos = [], filterStyle = "none" }) => {
   const rotations = ['-rotate-2', 'rotate-3', '-rotate-1'];

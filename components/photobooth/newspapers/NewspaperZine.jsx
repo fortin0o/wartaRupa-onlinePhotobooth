@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../../data/newspaperContent';
-import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/photobooth/templateUtils';
+import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
 
 const CHAR_FONTS = ['"Playfair Display", serif', '"Courier New", monospace', '"EB Garamond", serif', '"Georgia", serif'];
 const CHAR_SIZES   = ['1.1rem', '1.3rem', '0.95rem', '1.25rem', '1rem'];

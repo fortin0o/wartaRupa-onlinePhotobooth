@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const STARS = [
   { top: '6%', left: '12%' }, { top: '14%', left: '80%' }, { top: '30%', left: '30%' },

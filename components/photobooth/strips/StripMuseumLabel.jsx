@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { getFormattedDate, PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { getFormattedDate, PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const StripMuseumLabel = ({ photos = [], filterStyle = "none" }) => {
   const today = getFormattedDate('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });

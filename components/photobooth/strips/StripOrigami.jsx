@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PLACEHOLDER_STRIP } from '../../../utils/photobooth/templateUtils';
+import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
 
 const CraneSilhouette = ({ className }) => (
   <svg viewBox="0 0 60 40" className={className} fill="#b8cbd9" aria-hidden="true">

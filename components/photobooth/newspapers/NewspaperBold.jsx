@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle } from '../../../data/newspaperContent';
-import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/photobooth/templateUtils';
+import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
 
 // Rotasi acak tapi konsisten per render
 const ROTATE_OPTIONS = [-2, -1.5, -1, 0.5, 1, 1.5, 2];
