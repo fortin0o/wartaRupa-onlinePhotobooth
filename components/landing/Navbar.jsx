@@ -27,7 +27,7 @@ export default function Navbar() {
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/booth" className="px-4 py-1.5 border-2 border-ink font-ui font-bold text-sm uppercase tracking-widest hover:bg-ink hover:text-cream transition-colors">
+          <Link href="/booth" className="px-4 py-1.5 border-2 border-ink bg-cream font-ui font-bold text-sm uppercase tracking-widest hover-paper hover:bg-ink hover:text-cream transition-colors">
             Buka Kamera
           </Link>
           <button

@@ -1,4 +1,4 @@
-﻿export default function HowItWorksSection() {
+export default function HowItWorksSection() {
   const steps = [
     { n: '1', title: 'Pilih Cetakan', desc: 'Tersedia 13 variasi layout eksklusif. Dari halaman depan koran hingga pita foto klasik.' },
     { n: '2', title: 'Siapkan Gaya', desc: 'Kamera terhubung seketika di peramban Anda. Manfaatkan fitur hitung mundur dan pratinjau.' },
@@ -21,7 +21,7 @@
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, idx) => (
-              <div key={step.n} className="relative">
+              <div key={step.n} className="relative hover-paper p-4 bg-cream border border-transparent hover:border-ink transition-colors">
                 <div className="text-6xl font-display font-black text-ink opacity-20 mb-2 leading-none">
                   0{step.n}
                 </div>

@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 
 export default function HeroSection() {
   const date = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -38,14 +38,14 @@ export default function HeroSection() {
             </p>
           </div>
           
-          <Link href="/booth" className="inline-block px-8 py-4 bg-ink text-cream font-ui font-black text-xl uppercase tracking-widest hover:bg-accent transition-colors">
+          <Link href="/booth" className="inline-block px-8 py-4 bg-ink text-cream font-ui font-black text-xl uppercase tracking-widest hover-paper">
             Mulai Sesi Foto →
           </Link>
         </div>
 
         {/* Sidebar */}
-        <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="border-2 border-ink p-5 bg-paper shadow-[4px_4px_0_0_#111]">
+        <div className="lg:col-span-4 flex flex-col gap-6 mt-8 lg:mt-0">
+          <div className="border-2 border-ink p-5 bg-paper shadow-hard-sm hover-paper">
             <h3 className="font-display font-black text-2xl uppercase border-b-2 border-ink pb-2 mb-4">Sorotan Utama</h3>
             <ul className="font-body text-lg space-y-4">
               <li className="flex gap-3"><strong className="text-xl">13</strong> <span className="leading-tight">Template Editorial & Photostrip Eksklusif</span></li>
@@ -54,7 +54,7 @@ export default function HeroSection() {
               <li className="flex gap-3"><strong className="text-xl">0</strong> <span className="leading-tight">Data Disimpan di Server (Privasi 100%)</span></li>
             </ul>
           </div>
-          <div className="aspect-[4/3] border-2 border-ink bg-ink text-cream p-6 flex flex-col justify-center items-center text-center relative overflow-hidden group">
+          <div className="aspect-[4/3] border-2 border-ink bg-ink text-cream p-6 flex flex-col justify-center items-center text-center relative overflow-hidden group hover-paper">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&q=80&w=800')] bg-cover bg-center opacity-40 grayscale group-hover:scale-105 transition-transform duration-700"></div>
             <div className="relative z-10">
               <h4 className="font-display font-black text-3xl mb-3">Ruang Iklan</h4>

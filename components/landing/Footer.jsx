@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -25,7 +25,7 @@ export default function Footer() {
             <h4 className="font-black text-lg uppercase border-b-2 border-ink pb-2">Redaksi</h4>
             <Link href="/booth" className="text-sm font-bold uppercase tracking-wider hover:text-accent">Buka Kamera</Link>
             <Link href="/dashboard" className="text-sm font-bold uppercase tracking-wider hover:text-accent">Ruang Redaksi</Link>
-            <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-accent">Kawat Berita (Kontak)</a>
+            <Link href="/kontak" className="text-sm font-bold uppercase tracking-wider hover:text-accent">Kawat Berita (Kontak)</Link>
           </div>
         </div>
       </div>
@@ -33,8 +33,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto pt-6 border-t-4 border-ink flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-ui font-bold uppercase tracking-widest">
         <p>HAK CIPTA &copy; {new Date().getFullYear()} KANTOR BERITA WARTA RUPA.</p>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-accent">Surat Perjanjian</a>
-          <a href="#" className="hover:text-accent">Tata Tertib</a>
+          <Link href="/syarat-ketentuan" className="hover:text-accent">Surat Perjanjian</Link>
+          <Link href="/kebijakan-privasi" className="hover:text-accent">Tata Tertib</Link>
         </div>
       </div>
     </footer>
