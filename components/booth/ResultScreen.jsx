@@ -14,6 +14,10 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
   const [isGeneratingGif, setIsGeneratingGif] = useState(false);
   const [gifError, setGifError] = useState(null);
 
+  const [instaStoryUrl, setInstaStoryUrl] = useState(null);
+  const [isGeneratingInstaStory, setIsGeneratingInstaStory] = useState(false);
+  const [instaStoryError, setInstaStoryError] = useState(null);
+
   const hasCompleteVideoClips = videoClips && videoClips.length > 0 && videoClips.every(Boolean);
 
   const filterStyle = filters[selectedFilterId] || 'none';
@@ -59,21 +63,45 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     }
   }, [videoClips, selectedFilterId, hasCompleteVideoClips]);
 
+  const generateInstaStory = useCallback(async () => {
+    if (!imageUrl) return;
+    setIsGeneratingInstaStory(true);
+    setInstaStoryError(null);
+    try {
+      const { buildInstaStoryImage } = await import('@/utils/instaStoryExport');
+      const blob = await buildInstaStoryImage(imageUrl);
+      setInstaStoryUrl((prevUrl) => {
+        if (prevUrl) URL.revokeObjectURL(prevUrl);
+        return URL.createObjectURL(blob);
+      });
+    } catch (err) {
+      console.error('Gagal membuat Insta Story:', err);
+      setInstaStoryError('Gagal membuat Insta Story. Silakan coba lagi.');
+    } finally {
+      setIsGeneratingInstaStory(false);
+    }
+  }, [imageUrl]);
+
   useEffect(() => {
     generateImage();
   }, [generateImage]);
 
-  // GIF boomerang dibuat otomatis di latar belakang begitu layar hasil tampil,
-  // supaya sudah siap dipratonton saat pengguna melihat ke panelnya.
+  // GIF boomerang & Insta Story dibuat otomatis di latar belakang begitu layar
+  // hasil tampil, supaya sudah siap dipratonton saat pengguna melihat kartunya.
   useEffect(() => {
     generateGif();
   }, [generateGif]);
 
   useEffect(() => {
+    generateInstaStory();
+  }, [generateInstaStory]);
+
+  useEffect(() => {
     return () => {
       if (gifUrl) URL.revokeObjectURL(gifUrl);
+      if (instaStoryUrl) URL.revokeObjectURL(instaStoryUrl);
     };
-  }, [gifUrl]);
+  }, [gifUrl, instaStoryUrl]);
 
   const handleDownload = () => {
     if (!imageUrl) return;
@@ -90,6 +118,31 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
     link.download = `warta-rupa-boomerang-${Date.now()}.gif`;
     link.href = gifUrl;
     link.click();
+  };
+
+  const handleDownloadInstaStory = () => {
+    if (!instaStoryUrl) return;
+    const link = document.createElement('a');
+    link.download = `warta-rupa-instastory-${Date.now()}.png`;
+    link.href = instaStoryUrl;
+    link.click();
+  };
+
+  // Klik kartu = aksi utamanya: kalau gagal, coba lagi; kalau sudah siap, langsung download.
+  const handlePngCardClick = () => {
+    if (exportError) { generateImage(); return; }
+    if (imageUrl) handleDownload();
+  };
+
+  const handleGifCardClick = () => {
+    if (!hasCompleteVideoClips) return;
+    if (gifError) { generateGif(); return; }
+    if (gifUrl) handleDownloadGif();
+  };
+
+  const handleInstaStoryCardClick = () => {
+    if (instaStoryError) { generateInstaStory(); return; }
+    if (instaStoryUrl) handleDownloadInstaStory();
   };
 
   // Resolve strip component
@@ -126,13 +179,13 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
       <div className="text-center mb-8">
         <h2 className="text-3xl font-display font-bold mb-2">Hasil Akhir</h2>
         <p className="font-body text-gray-600">
-          Preview persis seperti yang akan Anda download.
+          Pilih format di bawah — klik kartunya untuk langsung mengunduh.
         </p>
       </div>
 
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8">
-        {/* Panel Gambar (PNG) */}
-        <div className="flex flex-col items-center">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start mb-8">
+        {/* Preview Besar (PNG) */}
+        <div className="flex justify-center">
           {isGenerating ? (
             <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px]">
               <div className="w-12 h-12 border-4 border-gray-300 border-t-ink rounded-full animate-spin mb-4"></div>
@@ -151,66 +204,107 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
               </button>
             </div>
           ) : (
-            <>
-              <div className="p-3 bg-white border-2 border-ink shadow-hard mb-6">
-                <img
-                  src={imageUrl}
-                  alt="Hasil Photobooth"
-                  className="max-h-[60vh] w-auto object-contain mx-auto"
-                />
-              </div>
-              <button
-                onClick={handleDownload}
-                className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
-              >
-                Download PNG
-              </button>
-            </>
+            <div className="p-3 bg-white border-2 border-ink shadow-hard">
+              <img
+                src={imageUrl}
+                alt="Hasil Photobooth"
+                className="max-h-[65vh] w-auto object-contain mx-auto"
+              />
+            </div>
           )}
         </div>
 
-        {/* Panel GIF Boomerang */}
-        <div className="flex flex-col items-center">
-          {!hasCompleteVideoClips ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px] text-center">
-              <p className="font-body text-gray-500">
-                GIF boomerang tidak tersedia untuk sesi ini (kamera/browser tidak mendukung perekaman video).
+        {/* Daftar Kartu Format — klik kartu untuk download */}
+        <div className="flex flex-col gap-4 w-full">
+          {/* Kartu PNG */}
+          <button
+            onClick={handlePngCardClick}
+            disabled={isGenerating}
+            className="group flex items-center gap-4 bg-cream border-2 border-ink p-3 text-left transition-shadow hover:shadow-hard-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          >
+            <div className="w-16 h-16 shrink-0 border border-ink bg-white flex items-center justify-center overflow-hidden">
+              {isGenerating ? (
+                <div className="w-6 h-6 border-2 border-gray-300 border-t-ink rounded-full animate-spin" />
+              ) : exportError ? (
+                <span className="text-xl">⚠️</span>
+              ) : (
+                <img src={imageUrl} alt="" className="w-full h-full object-cover" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-accent">●</span>
+                <span className="font-ui font-bold text-sm uppercase tracking-widest">Bingkai (PNG)</span>
+              </div>
+              <p className="font-body text-sm text-gray-600 truncate">
+                {isGenerating ? 'Menyiapkan...' : exportError ? 'Gagal — klik untuk coba lagi' : 'Klik untuk unduh'}
               </p>
             </div>
-          ) : isGeneratingGif ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px]">
-              <div className="w-12 h-12 border-4 border-gray-300 border-t-ink rounded-full animate-spin mb-4"></div>
-              <p className="font-body text-lg animate-pulse">Membuat GIF boomerang...</p>
+          </button>
+
+          {/* Kartu GIF */}
+          <button
+            onClick={handleGifCardClick}
+            disabled={!hasCompleteVideoClips}
+            className="group flex items-center gap-4 bg-cream border-2 border-ink p-3 text-left transition-shadow hover:shadow-hard-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          >
+            <div className="w-16 h-16 shrink-0 border border-ink bg-white flex items-center justify-center overflow-hidden">
+              {!hasCompleteVideoClips ? (
+                <span className="text-xl">🚫</span>
+              ) : isGeneratingGif ? (
+                <div className="w-6 h-6 border-2 border-gray-300 border-t-ink rounded-full animate-spin" />
+              ) : gifError ? (
+                <span className="text-xl">⚠️</span>
+              ) : (
+                <img src={gifUrl} alt="" className="w-full h-full object-cover" />
+              )}
             </div>
-          ) : gifError ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-accent shadow-hard w-full min-h-[300px] text-center">
-              <div className="text-4xl mb-4">⚠️</div>
-              <p className="font-display font-bold text-xl mb-2">Oops, Gagal!</p>
-              <p className="font-body text-gray-600 mb-6">{gifError}</p>
-              <button
-                onClick={generateGif}
-                className="px-6 py-2 bg-ink text-cream font-ui font-bold uppercase tracking-wider hover:bg-accent transition-colors"
-              >
-                Coba Lagi
-              </button>
-            </div>
-          ) : gifUrl ? (
-            <>
-              <div className="p-3 bg-white border-2 border-ink shadow-hard mb-6 w-full flex justify-center">
-                <img
-                  src={gifUrl}
-                  alt="GIF Boomerang"
-                  className="max-h-[60vh] w-auto object-contain mx-auto"
-                />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-accent">●</span>
+                <span className="font-ui font-bold text-sm uppercase tracking-widest">GIF Boomerang</span>
               </div>
-              <button
-                onClick={handleDownloadGif}
-                className="w-full max-w-xs px-6 py-3 bg-ink text-cream border-2 border-ink font-ui font-bold uppercase tracking-wider hover:bg-accent hover:border-accent transition-colors shadow-hard-sm"
-              >
-                Download GIF
-              </button>
-            </>
-          ) : null}
+              <p className="font-body text-sm text-gray-600 truncate">
+                {!hasCompleteVideoClips
+                  ? 'Tidak tersedia untuk sesi ini'
+                  : isGeneratingGif
+                  ? 'Membuat GIF...'
+                  : gifError
+                  ? 'Gagal — klik untuk coba lagi'
+                  : 'Klik untuk unduh'}
+              </p>
+            </div>
+          </button>
+
+          {/* Kartu Insta Story */}
+          <button
+            onClick={handleInstaStoryCardClick}
+            disabled={isGenerating || isGeneratingInstaStory}
+            className="group flex items-center gap-4 bg-cream border-2 border-ink p-3 text-left transition-shadow hover:shadow-hard-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          >
+            <div className="w-16 h-16 shrink-0 border border-ink bg-white flex items-center justify-center overflow-hidden">
+              {isGenerating || isGeneratingInstaStory ? (
+                <div className="w-6 h-6 border-2 border-gray-300 border-t-ink rounded-full animate-spin" />
+              ) : instaStoryError ? (
+                <span className="text-xl">⚠️</span>
+              ) : instaStoryUrl ? (
+                <img src={instaStoryUrl} alt="" className="w-full h-full object-cover" />
+              ) : null}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-accent">●</span>
+                <span className="font-ui font-bold text-sm uppercase tracking-widest">Insta Story</span>
+              </div>
+              <p className="font-body text-sm text-gray-600 truncate">
+                {isGenerating || isGeneratingInstaStory
+                  ? 'Menyiapkan...'
+                  : instaStoryError
+                  ? 'Gagal — klik untuk coba lagi'
+                  : 'Klik untuk unduh'}
+              </p>
+            </div>
+          </button>
         </div>
       </div>
 
