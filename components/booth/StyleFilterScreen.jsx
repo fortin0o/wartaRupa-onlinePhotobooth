@@ -34,7 +34,10 @@ const StyleFilterScreen = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
   const [editingPhotoIndex, setEditingPhotoIndex] = useState(null);
-  const previewRef = useRef(null);
+  
+  const previewContainerRef = useRef(null);
+  const templateRef = useRef(null);
+  const [previewScale, setPreviewScale] = useState(0.5);
 
   const availableThemes = useMemo(() => {
     const strips = stripThemes
@@ -70,6 +73,49 @@ const StyleFilterScreen = ({
   const activeTheme = availableThemes.find((t) => t.id === selectedThemeId) || availableThemes[0];
   const filterStyle = filters[selectedFilterId] || 'none';
   const otherBigIndex = bigPhotoIndex === 0 ? 1 : 0;
+
+  // Dynamic Scaling untuk mencegah overlap dan memaksimalkan ukuran
+  useEffect(() => {
+    if (!previewContainerRef.current || !templateRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      let containerRect = null;
+      for (let entry of entries) {
+        if (entry.target === previewContainerRef.current) {
+          containerRect = entry.contentRect;
+        }
+      }
+      
+      // Jika observer trigger bukan dari container (tapi dari template), 
+      // kita ukur ulang menggunakan ukuran container saat ini.
+      if (!containerRect) {
+        containerRect = previewContainerRef.current.getBoundingClientRect();
+      }
+
+      if (containerRect) {
+        const { width, height } = containerRect;
+        if (width === 0 || height === 0) return;
+        
+        // Ambil dimensi asli komponen yang di-render secara dinamis
+        const contentW = templateRef.current.offsetWidth;
+        const contentH = templateRef.current.offsetHeight;
+        
+        const isNewspaper = activeTheme?.family === 'newspaper';
+        // Fallback jika belum ter-render (contentW === 0)
+        const targetWidth = contentW > 0 ? contentW + 40 : (isNewspaper ? 480 + 40 : 300 + 40); 
+        const targetHeight = contentH > 0 ? contentH + 40 : (isNewspaper ? 640 + 40 : 900 + 40); 
+        
+        const scaleW = width / targetWidth;
+        const scaleH = height / targetHeight;
+        
+        setPreviewScale(Math.min(scaleW, scaleH, 1));
+      }
+    });
+    
+    observer.observe(previewContainerRef.current);
+    observer.observe(templateRef.current);
+    
+    return () => observer.disconnect();
+  }, [activeTheme]);
 
   // Object URL untuk pratinjau klip video singkat per foto
   const [clipUrls, setClipUrls] = useState([]);
@@ -125,117 +171,133 @@ const StyleFilterScreen = ({
       `}</style>
 
       {/* KIRI - STATIC (PREVIEW UTAMA) */}
-      <div className="w-full lg:w-[55%] h-full flex flex-col items-center p-6 relative lg:overflow-y-auto overflow-x-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="w-full lg:w-[50%] h-full flex flex-col items-center p-4 lg:p-6 relative bg-paper overflow-hidden border-r-4 border-ink">
         
         {/* Tombol Kembali (Absolute di Kiri Atas) */}
-        <div className="absolute top-6 left-6 z-10 hidden lg:block">
+        <div className="absolute top-4 left-4 lg:top-6 lg:left-6 z-10 hidden lg:block">
           <button
             onClick={onBack}
-            className="px-4 py-2 bg-cream border-2 border-ink font-ui font-bold uppercase tracking-wider shadow-hard-sm hover:translate-y-0.5 hover:shadow-none transition-all"
+            className="px-3 py-1.5 lg:px-4 lg:py-2 bg-cream border-2 border-ink font-ui font-bold text-xs lg:text-sm uppercase tracking-wider shadow-hard-sm hover:translate-y-0.5 hover:shadow-none transition-all"
           >
             &larr; Mulai Ulang
           </button>
         </div>
 
-        <div className="text-center mb-6 mt-16 lg:mt-6 max-w-md">
-          <h2 className="text-4xl font-display font-black uppercase tracking-tight mb-2">Review & Edit</h2>
-          <p className="font-body italic text-gray-700 bg-white border border-gray-300 px-3 py-1 inline-block">
-            Tips: Klik foto di dalam preview untuk menggeser/zoom
+        {/* HEADER */}
+        <div className="text-center mt-12 lg:mt-0 shrink-0 z-10 mb-2">
+          <h2 className="text-2xl lg:text-4xl font-display font-black uppercase tracking-tight mb-1">Review & Edit</h2>
+          <p className="font-body text-[10px] lg:text-xs italic text-gray-700 bg-white border border-gray-300 px-2 py-0.5 inline-block">
+            Tips: Klik foto di preview untuk geser/zoom
           </p>
         </div>
 
         {/* PREVIEW WRAPPER */}
-        <div 
-          className="bg-cream border-4 border-ink p-4 shadow-hard flex justify-center w-full max-w-2xl group preview-click-target transition-transform hover:scale-[1.01]"
-          onClick={handlePreviewClick}
-          ref={previewRef}
-        >
-          <div className="pointer-events-auto">
-            {renderTheme(activeTheme)}
-          </div>
-        </div>
-
-        {/* Togle Big Photo untuk Newspaper */}
-        {activeTheme.family === 'newspaper' && (
-          <div className="flex gap-3 mt-6">
-            <button
-              onClick={() => onSelectBigPhoto(0)}
-              disabled={bigPhotoIndex === 0}
-              className={`px-4 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider text-sm transition-colors ${
-                bigPhotoIndex === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300' : 'bg-cream hover:bg-white shadow-hard-sm'
-              }`}
-            >
-              Foto 1 Jadi Besar
-            </button>
-            <button
-              onClick={() => onSelectBigPhoto(1)}
-              disabled={bigPhotoIndex === 1}
-              className={`px-4 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider text-sm transition-colors ${
-                bigPhotoIndex === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300' : 'bg-cream hover:bg-white shadow-hard-sm'
-              }`}
-            >
-              Foto 2 Jadi Besar
-            </button>
-          </div>
-        )}
-
-        {/* ACTION BUTTON (Lanjut ke Hasil) - Dipindah ke Panel Kiri */}
-        <div className="mt-8 mb-4 w-full max-w-2xl flex justify-center">
-          <button
-            onClick={onNext}
-            className="w-full py-4 bg-ink text-cream font-ui font-black text-xl uppercase tracking-widest border-4 border-ink shadow-[6px_6px_0px_#1a1a1a] hover:bg-white hover:text-ink hover:translate-y-1 hover:shadow-[2px_2px_0px_#1a1a1a] transition-all"
+        <div className="flex-1 w-full min-h-0 my-2 relative" ref={previewContainerRef}>
+          <div 
+            className="absolute top-1/2 left-1/2 bg-cream border-4 border-ink p-2 lg:p-3 shadow-hard flex justify-center group preview-click-target cursor-pointer"
+            onClick={handlePreviewClick}
+            style={{ 
+              transform: `translate(-50%, -50%) scale(${previewScale})`,
+              transformOrigin: 'center center',
+              transition: 'transform 0.1s ease-out'
+            }}
           >
-            Lanjut ke Hasil Akhir &rarr;
-          </button>
-        </div>
-
-        {/* Retake Thumbnails */}
-        <div className="mt-4 border-t-2 border-ink pt-6 w-full max-w-lg mb-20 lg:mb-0">
-          <h4 className="text-center font-display font-bold uppercase text-sm mb-4">Daftar Jepretan</h4>
-          <div className="flex flex-wrap justify-center gap-4">
-            {photos.map((photo, i) => (
-              <div key={i} className="flex flex-col items-center gap-2">
-                {clipUrls[i] ? (
-                  <video src={clipUrls[i]} autoPlay loop muted playsInline className="w-16 h-16 object-cover border-2 border-ink" style={{ filter: filterStyle }} />
-                ) : (
-                  <img src={photo} alt={`Foto ${i + 1}`} className="w-16 h-16 object-cover border-2 border-ink" style={{ filter: filterStyle }} />
-                )}
-                <button
-                  onClick={() => onRetake(i)}
-                  className="text-[10px] font-ui font-bold uppercase tracking-widest border border-ink px-2 py-1 hover:bg-ink hover:text-cream transition-colors"
-                >
-                  Retake
-                </button>
-              </div>
-            ))}
+            <div className="pointer-events-auto" ref={templateRef}>
+              {renderTheme(activeTheme)}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* KANAN - SCROLLABLE (FILTER & TEMPLATES) */}
-      <div className="w-full lg:w-[45%] h-full overflow-y-auto bg-cream border-t-4 lg:border-t-0 lg:border-l-4 border-ink p-4 lg:p-8 pb-32" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      {/* KANAN - SCROLLABLE (TOOLS & TEMPLATES) */}
+      <div className="w-full lg:w-[50%] h-full flex flex-col bg-cream relative">
         
-        {/* FILTER WARNA (Card Newspaper Style) */}
-        <div className="border-2 border-ink p-5 mb-8 bg-white shadow-[6px_6px_0px_#1a1a1a]">
-          <h3 className="font-playfair font-black text-2xl uppercase border-b-2 border-ink pb-2 mb-4">Filter Warna</h3>
-          <div className="flex flex-wrap gap-2">
-            {Object.keys(filters).map((fId) => (
-              <button
-                key={fId}
-                onClick={() => onSelectFilter(fId)}
-                className={`flex-1 min-w-[100px] px-3 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider text-xs transition-colors ${
-                  selectedFilterId === fId ? 'bg-ink text-cream' : 'bg-cream text-ink hover:bg-gray-100'
-                }`}
-              >
-                {filterLabels[fId]}
-              </button>
-            ))}
+        {/* HEADER / ACTION KANAN (Sticky) */}
+        <div className="w-full p-4 lg:p-6 bg-paper border-b-4 border-ink shrink-0 z-20 shadow-sm flex justify-between items-center">
+          <div className="hidden lg:block">
+            <h3 className="font-playfair font-black text-xl uppercase tracking-widest">Pengaturan</h3>
           </div>
+          <button
+            onClick={onNext}
+            className="flex-1 lg:flex-none py-3 lg:py-4 px-6 bg-ink text-cream font-ui font-black text-sm lg:text-base uppercase tracking-widest border-2 border-ink shadow-[4px_4px_0px_#f5d020] hover:bg-cream hover:text-ink hover:translate-y-0.5 hover:shadow-[2px_2px_0px_#f5d020] transition-all"
+          >
+            Lanjut ke Hasil &rarr;
+          </button>
         </div>
 
-        {/* TABS KATEGORI TEMPLATE */}
-        <div className="mb-6">
-          <h3 className="font-playfair font-black text-2xl uppercase border-b-4 border-ink pb-2 mb-4">Katalog Template</h3>
+        {/* AREA SCROLL KANAN */}
+        <div className="flex-1 overflow-y-auto p-4 lg:p-8 pb-32" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          
+          {/* SECTION 1: DAFTAR JEPRETAN & POSISI */}
+          <div className="border-2 border-ink p-4 lg:p-5 mb-8 bg-white shadow-[6px_6px_0px_#1a1a1a]">
+            <h3 className="font-playfair font-black text-xl uppercase border-b-2 border-ink pb-2 mb-4">Daftar Jepretan</h3>
+            
+            <div className="flex flex-wrap gap-3 mb-4">
+              {photos.map((photo, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                  {clipUrls[i] ? (
+                    <video src={clipUrls[i]} autoPlay loop muted playsInline className="w-16 h-16 object-cover border-2 border-ink shadow-sm" style={{ filter: filterStyle }} />
+                  ) : (
+                    <img src={photo} alt={`Foto ${i + 1}`} className="w-16 h-16 object-cover border-2 border-ink shadow-sm" style={{ filter: filterStyle }} />
+                  )}
+                  <button
+                    onClick={() => onRetake(i)}
+                    className="text-[10px] font-ui font-bold uppercase tracking-widest border border-ink px-2 py-1 bg-white hover:bg-ink hover:text-cream transition-colors"
+                  >
+                    Retake
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {activeTheme.family === 'newspaper' && (
+              <div className="mt-4 pt-4 border-t-2 border-dashed border-gray-300">
+                <p className="font-ui text-xs font-bold uppercase mb-2">Pilih Foto Utama (Besar):</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => onSelectBigPhoto(0)}
+                    disabled={bigPhotoIndex === 0}
+                    className={`px-4 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider text-xs transition-colors ${
+                      bigPhotoIndex === 0 ? 'bg-ink text-cream cursor-not-allowed' : 'bg-cream hover:bg-white shadow-hard-sm'
+                    }`}
+                  >
+                    Foto 1
+                  </button>
+                  <button
+                    onClick={() => onSelectBigPhoto(1)}
+                    disabled={bigPhotoIndex === 1}
+                    className={`px-4 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider text-xs transition-colors ${
+                      bigPhotoIndex === 1 ? 'bg-ink text-cream cursor-not-allowed' : 'bg-cream hover:bg-white shadow-hard-sm'
+                    }`}
+                  >
+                    Foto 2
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* SECTION 2: FILTER WARNA */}
+          <div className="border-2 border-ink p-4 lg:p-5 mb-8 bg-white shadow-[6px_6px_0px_#1a1a1a]">
+            <h3 className="font-playfair font-black text-xl uppercase border-b-2 border-ink pb-2 mb-4">Filter Warna</h3>
+            <div className="flex flex-wrap gap-2">
+              {Object.keys(filters).map((fId) => (
+                <button
+                  key={fId}
+                  onClick={() => onSelectFilter(fId)}
+                  className={`flex-1 min-w-[100px] px-3 py-2 border-2 border-ink font-ui font-bold uppercase tracking-wider text-xs transition-colors ${
+                    selectedFilterId === fId ? 'bg-ink text-cream' : 'bg-cream text-ink hover:bg-gray-100'
+                  }`}
+                >
+                  {filterLabels[fId]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SECTION 3: KATALOG TEMPLATE */}
+          <div className="mb-6">
+            <h3 className="font-playfair font-black text-xl uppercase border-b-4 border-ink pb-2 mb-4">Katalog Template</h3>
           <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {CATEGORIES.map(cat => (
               <button
@@ -287,6 +349,7 @@ const StyleFilterScreen = ({
               </button>
             );
           })}
+        </div>
         </div>
       </div>
 
