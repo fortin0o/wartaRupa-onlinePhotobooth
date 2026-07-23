@@ -47,6 +47,12 @@ export default function BoothApp() {
     setCurrentScreen('style');
   };
 
+  const handleUpdatePhoto = (index, newPhoto) => {
+    const updatedPhotos = [...photos];
+    updatedPhotos[index] = newPhoto;
+    setPhotos(updatedPhotos);
+  };
+
   const handleRetakeRequest = (index) => {
     setRetakeIndex(index);
     setCurrentScreen('camera');
@@ -105,6 +111,7 @@ export default function BoothApp() {
           onSelectFilter={setSelectedFilterId}
           onSelectBigPhoto={setBigPhotoIndex}
           onRetake={handleRetakeRequest}
+          onUpdatePhoto={handleUpdatePhoto}
           onNext={handleFinalizeStyle}
           onBack={handleReset}
         />
