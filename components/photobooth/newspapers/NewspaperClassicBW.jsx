@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getRandomHeadline, getRandomArticle, headlines, articleSentences } from '../../../data/newspaperContent';
 import { getFormattedDate, buildCompositeFilter, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 // Nilai awal deterministik (sama di server & client) supaya tidak terjadi
 // hydration mismatch — pemilihan acak sesungguhnya baru terjadi di client
@@ -59,7 +60,7 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
       <div className="flex flex-col flex-1 overflow-hidden gap-4">
         
         <div className="w-full border-2 border-[#111] p-1 shrink-0">
-          <img
+          <LivePhoto
             src={mainPhotoSrc}
             alt="Foto Utama"
             className="w-full h-[220px] object-cover"
@@ -81,7 +82,7 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
           {/* Kolom Kanan - Foto Kecil & Teks */}
           <div className="w-[140px] flex flex-col shrink-0">
             <div className="border border-[#111] p-0.5 mb-2">
-              <img
+              <LivePhoto
                 src={smallPhotoSrc}
                 alt="Foto Kecil"
                 className="w-full h-[120px] object-cover"
@@ -106,5 +107,6 @@ const NewspaperClassicBW = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 };
 
 export default NewspaperClassicBW;
+
 
 

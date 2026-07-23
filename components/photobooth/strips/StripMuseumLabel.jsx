@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { getFormattedDate, PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripMuseumLabel = ({ photos = [], filterStyle = "none" }) => {
   const today = getFormattedDate('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -10,7 +11,7 @@ const StripMuseumLabel = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex flex-col gap-6">
         {photos.map((photo, i) => (
           <div key={i} className="flex flex-col">
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover"
@@ -34,3 +35,4 @@ const StripMuseumLabel = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripMuseumLabel;
+

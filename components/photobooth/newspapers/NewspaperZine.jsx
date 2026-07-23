@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getRandomHeadline, getRandomArticle, headlines, articleSentences } from '../../../data/newspaperContent';
 import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const CHAR_FONTS = ['"Playfair Display", serif', '"Courier New", monospace', '"EB Garamond", serif', '"Georgia", serif'];
 const CHAR_SIZES   = ['1.1rem', '1.3rem', '0.95rem', '1.25rem', '1rem'];
@@ -114,14 +115,14 @@ const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
             />
           ))}
           <div className="relative bg-white p-1 border-2 border-[#333] shadow-[3px_3px_0_rgba(0,0,0,0.25)]" style={{ transform: 'rotate(-1.5deg)' }}>
-            <img src={mainPhotoSrc} alt="Foto Utama" className="w-full h-[220px] object-cover block" style={{ filter: filterStyle }} />
+            <LivePhoto src={mainPhotoSrc} alt="Foto Utama" className="w-full h-[220px] object-cover block" style={{ filter: filterStyle }} />
           </div>
         </div>
 
         {/* Artikel + Foto Kecil */}
         <div className="flex flex-1 gap-4 overflow-hidden px-1 items-start">
           <div className="w-[100px] shrink-0 relative bg-white p-1 border border-[#555] shadow-[2px_2px_0_rgba(0,0,0,0.2)]" style={{ transform: 'rotate(2deg)' }}>
-            <img src={smallPhotoSrc} alt="Foto Kecil" className="w-full h-[100px] object-cover block" style={{ filter: filterStyle }} />
+            <LivePhoto src={smallPhotoSrc} alt="Foto Kecil" className="w-full h-[100px] object-cover block" style={{ filter: filterStyle }} />
           </div>
           
           <div className="flex-1 flex flex-col overflow-hidden">
@@ -146,5 +147,6 @@ const NewspaperZine = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 };
 
 export default NewspaperZine;
+
 
 

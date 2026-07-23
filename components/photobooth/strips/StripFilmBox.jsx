@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripFilmBox = ({ photos = [], filterStyle = "none" }) => {
   const holes = Array(10).fill(0);
@@ -22,7 +23,7 @@ const StripFilmBox = ({ photos = [], filterStyle = "none" }) => {
         <div className="flex flex-col gap-2.5">
           {photos.map((photo, i) => (
             <div key={i} className="bg-black p-1 border-2 border-black">
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Foto ${i + 1}`}
                 className="w-full aspect-[4/3] object-cover"
@@ -50,3 +51,4 @@ const StripFilmBox = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripFilmBox;
+

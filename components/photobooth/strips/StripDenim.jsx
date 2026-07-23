@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripDenim = ({ photos = [], filterStyle = "none" }) => {
   const denimBackground = {
@@ -65,7 +66,7 @@ const StripDenim = ({ photos = [], filterStyle = "none" }) => {
             style={tornPaperClipPath}
           >
             <div className="bg-gray-200 w-full mb-2">
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Denim Photo ${i+1}`}
                 className="w-full aspect-[4/3] object-cover" 
@@ -86,5 +87,6 @@ const StripDenim = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripDenim;
+
 
 

@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { buildCompositeFilter, PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripFilmNoir = ({ photos = [], filterStyle = "none" }) => {
   const noirFilter = buildCompositeFilter('grayscale(1) contrast(1.3) brightness(0.95)', filterStyle);
@@ -23,7 +24,7 @@ const StripFilmNoir = ({ photos = [], filterStyle = "none" }) => {
         <div className="flex flex-col gap-2.5">
           {photos.map((photo, i) => (
             <div key={i} className="relative border border-[#d4af37]/60">
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Foto ${i + 1}`}
                 className="w-full aspect-[4/3] object-cover"
@@ -54,3 +55,4 @@ const StripFilmNoir = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripFilmNoir;
+

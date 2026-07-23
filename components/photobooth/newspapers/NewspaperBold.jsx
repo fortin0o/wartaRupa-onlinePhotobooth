@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getRandomHeadline, getRandomArticle, headlines, articleSentences } from '../../../data/newspaperContent';
 import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 // Rotasi acak tapi konsisten per render
 const ROTATE_OPTIONS = [-2, -1.5, -1, 0.5, 1, 1.5, 2];
@@ -88,7 +89,7 @@ const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 
         {/* Foto Besar */}
         <div className="w-full shrink-0 border-4 border-white">
-          <img
+          <LivePhoto
             src={mainPhotoSrc}
             alt="Foto Utama"
             className="w-full h-[220px] object-cover block"
@@ -100,7 +101,7 @@ const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         <div className="flex flex-1 gap-3 overflow-hidden mt-1">
           <div className="w-[100px] h-full flex flex-col shrink-0 gap-2">
             <div className="border-4 border-[#f5d020]">
-              <img
+              <LivePhoto
                 src={smallPhotoSrc}
                 alt="Foto Kecil"
                 className="w-full h-[100px] object-cover block"
@@ -132,5 +133,6 @@ const NewspaperBold = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 };
 
 export default NewspaperBold;
+
 
 

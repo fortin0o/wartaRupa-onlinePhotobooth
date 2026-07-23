@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripVaporwave = ({ photos = [], filterStyle = "none" }) => {
   const skyBg = {
@@ -29,7 +30,7 @@ const StripVaporwave = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex flex-col gap-3 relative z-10">
         {photos.map((photo, i) => (
           <div key={i} className="p-1 bg-white/90" style={{ boxShadow: '0 0 12px rgba(255,255,255,0.6)' }}>
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover"
@@ -47,3 +48,4 @@ const StripVaporwave = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripVaporwave;
+

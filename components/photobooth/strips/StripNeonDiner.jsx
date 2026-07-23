@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripNeonDiner = ({ photos = [], filterStyle = "none" }) => {
   const checkerBg = {
@@ -25,7 +26,7 @@ const StripNeonDiner = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex flex-col gap-3 p-4">
         {photos.map((photo, i) => (
           <div key={i} className="p-1 bg-white">
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover"
@@ -41,3 +42,4 @@ const StripNeonDiner = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripNeonDiner;
+

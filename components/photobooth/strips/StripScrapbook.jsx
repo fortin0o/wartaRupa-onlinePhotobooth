@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const FloralCorner = ({ className }) => (
   <svg viewBox="0 0 60 60" className={className} fill="none" aria-hidden="true">
@@ -32,7 +33,7 @@ const StripScrapbook = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex flex-col gap-3 relative z-10">
         {photos.map((photo, i) => (
           <div key={i} className="bg-white p-2 shadow-sm border border-[#e2d3b8]">
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover"
@@ -57,3 +58,4 @@ const StripScrapbook = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripScrapbook;
+

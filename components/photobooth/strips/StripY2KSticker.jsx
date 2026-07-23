@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const STICKERS = ['✦', '♡', '★', '✧'];
 
@@ -35,7 +36,7 @@ const StripY2KSticker = ({ photos = [], filterStyle = "none" }) => {
             <div className="absolute -top-2 -right-2 bg-[#ffe3f3] border border-[#f0a8dc] rounded-full w-7 h-7 flex items-center justify-center text-xs rotate-12 shadow-sm">
               {STICKERS[i % STICKERS.length]}
             </div>
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover rounded-xl"
@@ -55,3 +56,4 @@ const StripY2KSticker = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripY2KSticker;
+

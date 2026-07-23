@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const STARS = [
   { top: '6%', left: '12%' }, { top: '14%', left: '80%' }, { top: '30%', left: '30%' },
@@ -26,7 +27,7 @@ const StripGalaxy = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex flex-col gap-3 relative z-10">
         {photos.map((photo, i) => (
           <div key={i} className="p-1 rounded-lg" style={{ border: '2px solid #f5d99a', boxShadow: '0 0 10px rgba(245,217,154,0.4)' }}>
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover rounded"
@@ -44,3 +45,4 @@ const StripGalaxy = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripGalaxy;
+

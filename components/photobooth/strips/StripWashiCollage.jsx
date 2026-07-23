@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const TAPE_COLORS = ['rgba(255,196,138,0.7)', 'rgba(168,213,186,0.7)', 'rgba(168,196,240,0.7)', 'rgba(240,168,214,0.7)'];
 const ROTATIONS = ['-6deg', '4deg', '-3deg', '5deg'];
@@ -20,7 +21,7 @@ const StripWashiCollage = ({ photos = [], filterStyle = "none" }) => {
               style={{ background: TAPE_COLORS[i % TAPE_COLORS.length], boxShadow: '0 1px 2px rgba(0,0,0,0.15)' }}
             />
             <div className="bg-white p-1.5 shadow-md border border-gray-200 w-full">
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Foto ${i + 1}`}
                 className="w-full aspect-[4/3] object-cover"
@@ -37,3 +38,4 @@ const StripWashiCollage = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripWashiCollage;
+

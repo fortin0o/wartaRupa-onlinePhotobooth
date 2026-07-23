@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripCute = ({ photos = [], filterStyle = "none" }) => {
   return (
@@ -12,7 +13,7 @@ const StripCute = ({ photos = [], filterStyle = "none" }) => {
 
       {photos.map((photo, i) => (
         <div key={i} className="bg-white p-2 rounded-2xl shadow-sm border border-pink-200">
-          <img
+          <LivePhoto
             src={photo || PLACEHOLDER_STRIP}
             alt={`Cute ${i+1}`}
             className="w-full aspect-[4/3] object-cover rounded-xl" 
@@ -26,5 +27,6 @@ const StripCute = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripCute;
+
 
 

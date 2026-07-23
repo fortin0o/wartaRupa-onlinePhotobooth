@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripNeonCyberpunk = ({ photos = [], filterStyle = "none" }) => {
   const gridBg = {
@@ -28,7 +29,7 @@ const StripNeonCyberpunk = ({ photos = [], filterStyle = "none" }) => {
             className="p-1"
             style={{ border: '2px solid #0ff', boxShadow: '0 0 8px #0ff, inset 0 0 8px rgba(0,255,255,0.3)' }}
           >
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover"
@@ -48,3 +49,4 @@ const StripNeonCyberpunk = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripNeonCyberpunk;
+

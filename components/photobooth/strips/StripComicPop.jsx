@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripComicPop = ({ photos = [], filterStyle = "none" }) => {
   const halftoneBg = {
@@ -20,7 +21,7 @@ const StripComicPop = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex flex-col gap-3 relative z-10">
         {photos.map((photo, i) => (
           <div key={i} className="bg-white p-1 border-4 border-black shadow-[4px_4px_0_#111]">
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Foto ${i + 1}`}
               className="w-full aspect-[4/3] object-cover"
@@ -44,3 +45,4 @@ const StripComicPop = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripComicPop;
+

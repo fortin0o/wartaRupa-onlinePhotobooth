@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getRandomHeadline, getRandomArticle, headlines, articleSentences } from '../../../data/newspaperContent';
 import { getFormattedDate, PLACEHOLDER_BIG, PLACEHOLDER_SMALL } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 // Nilai awal deterministik (sama di server & client) supaya tidak terjadi
 // hydration mismatch — pemilihan acak sesungguhnya baru terjadi di client
@@ -57,7 +58,7 @@ const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
         
         {/* BIG PHOTO + STAMP */}
         <div className="relative border-4 border-black shrink-0">
-          <img
+          <LivePhoto
             src={mainPhotoSrc}
             alt="Foto Utama"
             className="w-full h-[240px] object-cover"
@@ -85,7 +86,7 @@ const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
           
           <div className="w-[120px] flex flex-col shrink-0">
             <div className="border-2 border-black p-1 bg-white mb-2">
-              <img
+              <LivePhoto
                 src={smallPhotoSrc}
                 alt="Foto Kecil"
                 className="w-full h-[120px] object-cover"
@@ -104,5 +105,6 @@ const NewspaperTabloid = ({ bigPhoto, smallPhoto, filterStyle = "none" }) => {
 };
 
 export default NewspaperTabloid;
+
 
 

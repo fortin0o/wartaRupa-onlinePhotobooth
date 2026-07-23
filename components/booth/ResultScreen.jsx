@@ -3,6 +3,7 @@ import { toPng } from 'html-to-image';
 import { stripThemes } from '@/data/stripThemes';
 import { newspaperThemes } from '@/data/newspaperThemes';
 import { filters } from '@/utils/filters';
+import { LivePhotoContext } from './LivePhoto';
 
 const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoClips, selectedFilterId, onReset }) => {
   const templateRef = useRef(null);
@@ -180,15 +181,15 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
       </div>
 
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start mb-8">
-        {/* Preview Besar (PNG) */}
-        <div className="flex justify-center">
+        {/* Preview Besar (Live Template) */}
+        <div className="flex justify-center w-full">
           {isGenerating ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-ink shadow-hard w-full min-h-[300px]">
+            <div className="flex flex-col items-center justify-center p-12 bg-white border-4 border-ink shadow-hard w-full max-w-xl min-h-[400px]">
               <div className="w-12 h-12 border-4 border-gray-300 border-t-ink rounded-full animate-spin mb-4"></div>
               <p className="font-body text-lg animate-pulse">Menyiapkan hasil...</p>
             </div>
           ) : exportError ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-accent shadow-hard w-full min-h-[300px] text-center">
+            <div className="flex flex-col items-center justify-center p-12 bg-white border-4 border-ink shadow-hard w-full max-w-xl min-h-[400px] text-center">
               <div className="text-4xl mb-4">⚠️</div>
               <p className="font-display font-bold text-xl mb-2">Oops, Gagal!</p>
               <p className="font-body text-gray-600 mb-6">{exportError}</p>
@@ -200,12 +201,23 @@ const ResultScreen = ({ template, stripThemeId, newspaperThemeId, photos, videoC
               </button>
             </div>
           ) : (
-            <div className="p-3 bg-white border-2 border-ink shadow-hard">
-              <img
-                src={imageUrl}
-                alt="Hasil Photobooth"
-                className="max-h-[65vh] w-auto object-contain mx-auto"
-              />
+            <div className="p-4 bg-cream border-4 border-ink shadow-hard flex justify-center w-full max-w-xl mx-auto">
+              <div className="pointer-events-none w-full">
+                <LivePhotoContext.Provider value={{ photos, videoClips }}>
+                  {template === 'newspaper' && NewspaperComponent ? (
+                    <NewspaperComponent
+                      bigPhoto={photos[0]}
+                      smallPhoto={photos[1]}
+                      filterStyle={filterStyle}
+                    />
+                  ) : StripComponent ? (
+                    <StripComponent
+                      photos={photos}
+                      filterStyle={filterStyle}
+                    />
+                  ) : null}
+                </LivePhotoContext.Provider>
+              </div>
             </div>
           )}
         </div>

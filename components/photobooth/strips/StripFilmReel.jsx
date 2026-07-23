@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripFilmReel = ({ photos = [], filterStyle = "none" }) => {
   // Bikin lubang-lubang film
@@ -20,7 +21,7 @@ const StripFilmReel = ({ photos = [], filterStyle = "none" }) => {
       <div className="flex-1 flex flex-col gap-2 py-4">
         {photos.map((photo, i) => (
           <div key={i} className="bg-black border-y-2 border-[#222]">
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Film ${i+1}`}
               className="w-full aspect-[4/3] object-cover opacity-90 sepia-[0.2]" 
@@ -46,5 +47,6 @@ const StripFilmReel = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripFilmReel;
+
 
 

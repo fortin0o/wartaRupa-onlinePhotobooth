@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 // Blob border-radius yang berbeda untuk tiap foto
 const blobShapes = [
@@ -87,7 +88,7 @@ const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
                 aspectRatio: '1 / 1',
               }}
             >
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Photo ${i + 1}`}
                 className="w-full h-full object-cover"
@@ -126,5 +127,6 @@ const StripPlayfulBlob = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripPlayfulBlob;
+
 
 

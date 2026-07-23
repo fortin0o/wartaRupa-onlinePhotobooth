@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
   // Pola checkerboard biru navy dan putih
@@ -36,7 +37,7 @@ const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
         {photos.map((photo, i) => (
           <div key={i} className="bg-white p-3 shadow-[4px_4px_12px_rgba(0,0,0,0.35)] relative">
             <div className="bg-gray-100 border border-gray-200">
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Photo ${i+1}`}
                 className="w-full aspect-square object-cover" 
@@ -68,5 +69,6 @@ const StripPolaroidStripes = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripPolaroidStripes;
+
 
 

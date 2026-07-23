@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const StripPolaroid = ({ photos = [], filterStyle = "none" }) => {
   const rotations = ['-rotate-2', 'rotate-3', '-rotate-1'];
@@ -10,7 +11,7 @@ const StripPolaroid = ({ photos = [], filterStyle = "none" }) => {
       {photos.map((photo, i) => (
         <div key={i} className={`bg-[#fafafa] p-3 pb-12 shadow-sm border border-gray-300 ${rotations[i % rotations.length]}`}>
           <div className="border border-gray-200 bg-gray-100">
-            <img
+            <LivePhoto
               src={photo || PLACEHOLDER_STRIP}
               alt={`Polaroid ${i+1}`}
               className="w-full aspect-square object-cover" 
@@ -24,5 +25,6 @@ const StripPolaroid = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripPolaroid;
+
 
 

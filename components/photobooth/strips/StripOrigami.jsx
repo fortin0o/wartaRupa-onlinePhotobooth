@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PLACEHOLDER_STRIP } from '../../../utils/templateUtils';
+import { LivePhoto } from '@/components/booth/LivePhoto';
 
 const CraneSilhouette = ({ className }) => (
   <svg viewBox="0 0 60 40" className={className} fill="#b8cbd9" aria-hidden="true">
@@ -33,7 +34,7 @@ const StripOrigami = ({ photos = [], filterStyle = "none" }) => {
                 clipPath: 'polygon(4% 0%, 100% 0%, 96% 100%, 0% 100%)',
               }}
             >
-              <img
+              <LivePhoto
                 src={photo || PLACEHOLDER_STRIP}
                 alt={`Foto ${i + 1}`}
                 className="w-full aspect-[4/3] object-cover"
@@ -50,3 +51,4 @@ const StripOrigami = ({ photos = [], filterStyle = "none" }) => {
 };
 
 export default StripOrigami;
+
