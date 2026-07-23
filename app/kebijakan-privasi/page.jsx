@@ -1,8 +1,13 @@
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 
+export const metadata = {
+  title: 'Kebijakan Privasi | Warta Rupa',
+  description: 'Tata tertib dan kebijakan privasi penggunaan aplikasi Warta Rupa online photobooth.',
+};
+
 export default function KebijakanPrivasiPage() {
-  const date = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+  const date = '23 Juli 2026';
 
   return (
     <div className="bg-cream min-h-screen grain flex flex-col">

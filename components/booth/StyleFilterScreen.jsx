@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { stripThemes } from '@/data/stripThemes';
 import { newspaperThemes } from '@/data/newspaperThemes';
 import { filters, filterLabels } from '@/utils/filters';
@@ -42,16 +42,17 @@ const StyleFilterScreen = ({
   const otherBigIndex = bigPhotoIndex === 0 ? 1 : 0;
 
   // Object URL untuk pratinjau klip video singkat per foto (jika ada).
-  const clipUrls = useMemo(
-    () => (videoClips || []).map((clip) => (clip ? URL.createObjectURL(clip) : null)),
-    [videoClips]
-  );
+  const [clipUrls, setClipUrls] = useState([]);
 
   useEffect(() => {
+    const urls = (videoClips || []).map((clip) => (clip ? URL.createObjectURL(clip) : null));
+    setClipUrls(urls);
     return () => {
-      clipUrls.forEach((url) => url && URL.revokeObjectURL(url));
+      urls.forEach((url) => {
+        if (url) URL.revokeObjectURL(url);
+      });
     };
-  }, [clipUrls]);
+  }, [videoClips]);
 
   const renderTheme = (theme) => {
     if (!theme) return null;
